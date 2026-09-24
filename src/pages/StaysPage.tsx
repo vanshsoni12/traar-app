@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTrip } from "../context/TripContext";
 import { supabase } from "../supabaseClient";
@@ -6,6 +6,7 @@ import "./StaysPage.css";
 
 type Stay = {
   id: number;
+  listingId?: string;
   emoji: string;
   type: string;
   name: string;
@@ -18,6 +19,20 @@ type Stay = {
   checkOut: string;
   busyTime: string;
   bestFor: string;
+};
+
+type ProviderListing = {
+  id: string;
+  category: string;
+  name: string;
+  description: string | null;
+  address: string;
+  price: number | null;
+  price_unit: string | null;
+  amenities: string[] | null;
+  opening_hours: string | null;
+  status: string;
+  listing_images: { storage_path: string; sort_order: number }[];
 };
 
 const stays: Stay[] = [
@@ -94,6 +109,9 @@ const stays: Stay[] = [
 export default function StaysPage() {
   const { city } = useParams();
   const { addItem } = useTrip();
+  const [providerStays, setProviderStays] = useState<Stay[]>([]);
+  const [loadingProviderStays, setLoadingProviderStays] = useState(true);
+  const [providerError, setProviderError] = useState("");
 
   const [selectedStay, setSelectedStay] = useState<Stay | null>(null);
   const [reportingStay, setReportingStay] = useState<Stay | null>(null);
@@ -112,6 +130,77 @@ export default function StaysPage() {
     setReportMessage("");
     setReportingStay(stay);
   }
+    useEffect(() => {
+    async function loadProviderStays() {
+      setLoadingProviderStays(true);
+      setProviderError("");
+
+      const { data, error } = await supabase
+        .from("listings")
+        .select(
+          "id, category, name, description, address, price, price_unit, amenities, opening_hours, status, listing_images(storage_path, sort_order)"
+        )
+        .eq("category", "STAY")
+        .eq("status", "approved")
+        .ilike("address", `%${cityName}%`)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        setProviderError("Live provider stays could not be loaded yet.");
+        setLoadingProviderStays(false);
+        return;
+      }
+
+      const formattedStays: Stay[] = ((data || []) as ProviderListing[]).map(
+        (listing, index) => {
+          const firstImage = [...(listing.listing_images || [])].sort(
+            (a, b) => a.sort_order - b.sort_order
+          )[0];
+
+          const imageUrl = firstImage
+            ? supabase.storage
+                .from("listing-images")
+                .getPublicUrl(firstImage.storage_path).data.publicUrl
+            : "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80";
+
+          return {
+            id: 10000 + index,
+            listingId: listing.id,
+            emoji: "🏨",
+            type: listing.category === "STAY" ? "LOCAL STAY" : listing.category,
+            name: listing.name,
+            location: listing.address,
+            price:
+              listing.price === null
+                ? "Price on request"
+                : `₹${Number(listing.price).toLocaleString("en-IN")} ${
+                    listing.price_unit || ""
+                  }`,
+            tripPrice: Number(listing.price || 0),
+            image: imageUrl,
+            overview:
+              listing.description ||
+              "A verified local stay listed by a TRAAR provider.",
+            checkIn: "Please confirm directly with the property",
+            checkOut: "Please confirm directly with the property",
+            busyTime:
+              "Contact the property for current availability and busy periods.",
+            bestFor:
+              listing.amenities?.length
+                ? listing.amenities.join(" • ")
+                : "Local travellers and visitors",
+          };
+        }
+      );
+
+      setProviderStays(formattedStays);
+      setLoadingProviderStays(false);
+    }
+
+    loadProviderStays();
+  }, [cityName]);
+
+  const allStays = [...providerStays, ...stays];
 
   async function submitReport() {
     if (!reportingStay) return;
@@ -125,7 +214,7 @@ export default function StaysPage() {
     setMessage("");
 
     const { error } = await supabase.from("user_reports").insert({
-      listing_id: null,
+      listing_id: reportingStay.listingId || null,
       report_type: `${reportType} — ${reportingStay.name}`,
       message: `Stay: ${reportingStay.name}\nLocation: ${reportingStay.location}\n\nReport: ${reportMessage.trim()}`,
       status: "open",
@@ -153,9 +242,16 @@ export default function StaysPage() {
       {message && !reportingStay && (
         <p className="stay-report-success">{message}</p>
       )}
+            {loadingProviderStays && (
+        <p className="stay-report-success">Loading live local stays...</p>
+      )}
+
+      {providerError && (
+        <p className="stay-report-error">{providerError}</p>
+      )}
 
       <section className="stays-grid">
-        {stays.map((stay) => (
+       {allStays.map((stay) => (
           <article className="stay-card" key={stay.id}>
             <img
               className="stay-image"
