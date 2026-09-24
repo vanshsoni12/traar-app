@@ -1,0 +1,647 @@
+.stays-page {
+  min-height: 100vh;
+  padding: 70px 8%;
+  background: #fffaf4;
+  color: #40534f;
+}
+
+.stays-header {
+  margin-bottom: 38px;
+}
+
+.stays-label,
+.stay-type {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #b47a61;
+}
+
+.stays-header h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(38px, 5vw, 60px);
+  color: #40534f;
+}
+
+.stays-header > p:last-child {
+  margin-top: 14px;
+  color: #71807c;
+  font-size: 17px;
+}
+
+.stays-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 26px;
+}
+
+.stay-card {
+  overflow: hidden;
+  border: 1px solid #e9e1d8;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(61, 78, 73, 0.08);
+}
+
+.stay-emoji {
+  display: grid;
+  min-height: 210px;
+  place-items: center;
+  background: linear-gradient(135deg, #dff0e4, #c7e3d1);
+  font-size: 68px;
+}
+
+.stay-info {
+  padding: 25px;
+}
+
+.stay-info h2 {
+  margin: 0 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 29px;
+  color: #40534f;
+}
+
+.stay-location {
+  margin: 0;
+  color: #7c8784;
+  font-size: 15px;
+}
+
+.stay-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.stay-footer strong {
+  font-size: 17px;
+  color: #40534f;
+}
+
+.stay-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stay-directions-button,
+.stay-actions button {
+  border-radius: 12px;
+  padding: 11px 13px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.stay-directions-button {
+  border: 1px solid #627d75;
+  background: white;
+  color: #46665d;
+}
+
+.stay-actions button {
+  border: 0;
+  background: #627d75;
+  color: white;
+}
+
+.stay-actions button:hover {
+  background: #46665d;
+}
+
+.stay-directions-button:hover {
+  background: #edf5ef;
+}
+
+@media (max-width: 760px) {
+  .stays-page {
+    padding: 42px 20px;
+  }
+
+  .stays-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stay-emoji {
+    min-height: 165px;
+  }
+
+  .stay-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .stay-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .stay-directions-button,
+  .stay-actions button {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+}
+.stay-report-success {
+  margin: 18px 0;
+  padding: 12px;
+  border-radius: 10px;
+  color: #146c5d;
+  background: #e8f6f1;
+  font-weight: 700;
+}
+
+.stay-report-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(8, 25, 21, 0.55);
+}
+
+.stay-report-modal {
+  position: relative;
+  width: min(500px, 100%);
+  padding: 28px;
+  border-radius: 20px;
+  background: white;
+}
+
+.stay-report-modal > p {
+  margin: 0;
+  color: #167b69;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.stay-report-modal h2 {
+  margin: 8px 0;
+}
+
+.stay-report-modal > span {
+  color: #657570;
+}
+
+.stay-report-modal label {
+  display: grid;
+  gap: 7px;
+  margin-top: 18px;
+  color: #40514d;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.stay-report-modal select,
+.stay-report-modal textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px;
+  border: 1px solid #cddbd7;
+  border-radius: 9px;
+  font: inherit;
+}
+
+.stay-report-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.7rem;
+}
+
+.stay-report-submit {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border: 0;
+  border-radius: 10px;
+  color: white;
+  background: #167b69;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.stay-report-error {
+  margin: 14px 0 0 !important;
+  color: #b42318 !important;
+  font-size: 0.9rem !important;
+  letter-spacing: normal !important;
+}
+/* Compact stay cards */
+
+.stays-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+  gap: 16px;
+}
+
+.stay-card {
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #dce8e4;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 8px 18px rgba(22, 54, 43, 0.07);
+}
+
+.stay-image {
+  display: block;
+  width: 100%;
+  height: 145px;
+  object-fit: cover;
+}
+
+.stay-info {
+  padding: 15px;
+}
+
+.stay-info h2 {
+  margin: 6px 0;
+  font-size: 1.14rem;
+}
+
+.stay-type {
+  margin: 0;
+  color: #167b69;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.stay-location {
+  margin: 7px 0 13px;
+  color: #63736f;
+  font-size: 0.86rem;
+}
+
+.stay-footer {
+  display: grid;
+  gap: 12px;
+}
+
+.stay-footer > strong {
+  color: #17251d;
+  font-size: 0.95rem;
+}
+
+.stay-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.stay-actions button {
+  padding: 8px 10px;
+  border: 1px solid #cddbd7;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.stay-actions .stay-details-button {
+  color: #167b69;
+  border-color: #167b69;
+}
+
+.stay-actions .stay-trip-button {
+  color: white;
+  border-color: #167b69;
+  background: #167b69;
+}
+
+/* Small centered View Details popup */
+
+.stay-details-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(9, 28, 23, 0.28);
+}
+
+.stay-details-modal {
+  position: relative;
+  width: min(540px, calc(100% - 24px));
+  max-height: 78vh;
+  overflow-y: auto;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 22px 55px rgba(12, 35, 28, 0.24);
+}
+
+.stay-details-modal > img {
+  display: block;
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.stay-details-content {
+  padding: 20px;
+}
+
+.stay-details-content > p:first-child {
+  margin: 0;
+  color: #167b69;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.stay-details-content h2 {
+  margin: 7px 0;
+  font-size: 1.45rem;
+}
+
+.stay-details-content > span {
+  color: #657570;
+  font-size: 0.88rem;
+}
+
+.stay-details-content h3 {
+  margin: 18px 0 7px;
+  font-size: 1rem;
+}
+
+.stay-details-content > p {
+  color: #53645f;
+  line-height: 1.55;
+}
+
+.stay-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.stay-detail-grid article {
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f2f8f5;
+}
+
+.stay-detail-grid small {
+  color: #698078;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.stay-detail-grid strong {
+  color: #29463d;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.stay-details-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.stay-details-bottom button {
+  padding: 10px 13px;
+  border: 0;
+  border-radius: 9px;
+  color: white;
+  background: #167b69;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.stay-details-close {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 12px;
+  width: 31px;
+  height: 31px;
+  border: 0;
+  border-radius: 50%;
+  color: #17251d;
+  background: white;
+  cursor: pointer;
+  font-size: 1.35rem;
+}
+
+@media (max-width: 500px) {
+  .stay-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stay-details-bottom {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .stay-details-bottom button {
+    width: 100%;
+  }
+}
+.stay-details-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.stay-details-actions a {
+  padding: 10px 12px;
+  border: 1px solid #167b69;
+  border-radius: 9px;
+  color: #146c5d;
+  background: white;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.stay-details-actions a:hover {
+  background: #dff3ec;
+}
+
+@media (max-width: 500px) {
+  .stay-details-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stay-details-actions a {
+    text-align: center;
+  }
+}
+.stay-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.stay-secondary-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.stay-secondary-actions button {
+  padding: 9px 10px;
+  border: 1px solid #cddbd7;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.stay-secondary-actions .stay-details-button {
+  color: #146c5d;
+  border-color: #167b69;
+}
+
+.stay-secondary-actions .stay-details-button:hover {
+  background: #dff3ec;
+}
+
+.stay-secondary-actions .stay-report-button {
+  color: #9a3412;
+  border-color: #e8b59f;
+  background: #fffaf7;
+}
+
+.stay-secondary-actions .stay-report-button:hover {
+  background: #ffe8dd;
+}
+
+.stay-trip-button {
+  padding: 10px 13px !important;
+  border: 0 !important;
+  border-radius: 9px !important;
+  color: white !important;
+  background: #167b69 !important;
+  cursor: pointer;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.stay-trip-button:hover {
+  background: #0f6757 !important;
+}
+
+@media (max-width: 600px) {
+  .stay-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .stay-secondary-actions {
+    width: 100%;
+  }
+
+  .stay-secondary-actions button,
+  .stay-trip-button {
+    flex: 1;
+  }
+}
+/* Exactly 3 hotel cards in one row */
+
+.stays-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+/* Exactly 3 buttons in one row */
+
+.stay-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  align-items: stretch;
+}
+
+.stay-secondary-actions {
+  display: contents;
+}
+
+.stay-actions .stay-details-button,
+.stay-actions .stay-report-button,
+.stay-actions .stay-trip-button {
+  display: grid;
+  width: 100%;
+  min-height: 38px;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 7px 5px !important;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  line-height: 1.15;
+  text-align: center;
+  white-space: normal;
+}
+
+.stay-actions .stay-details-button {
+  color: #146c5d;
+  border: 1px solid #167b69;
+  background: white;
+}
+
+.stay-actions .stay-details-button:hover {
+  background: #dff3ec;
+}
+
+.stay-actions .stay-report-button {
+  color: #9a3412;
+  border: 1px solid #e8b59f;
+  background: #fffaf7;
+}
+
+.stay-actions .stay-report-button:hover {
+  background: #ffe8dd;
+}
+
+.stay-actions .stay-trip-button {
+  border: 0 !important;
+  color: white !important;
+  background: #167b69 !important;
+}
+
+.stay-actions .stay-trip-button:hover {
+  background: #0f6757 !important;
+}
+
+@media (max-width: 1000px) {
+  .stays-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .stays-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stay-actions .stay-details-button,
+  .stay-actions .stay-report-button,
+  .stay-actions .stay-trip-button {
+    font-size: 0.8rem;
+  }
+}
+

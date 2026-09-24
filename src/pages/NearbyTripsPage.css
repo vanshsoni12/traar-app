@@ -1,0 +1,416 @@
+.nearby-page {
+  min-height: 100vh;
+  padding: 45px 0 80px;
+  background: #f8f7f1;
+  color: #17251d;
+}
+
+.nearby-header,
+.nearby-grid {
+  width: min(1080px, calc(100% - 40px));
+  margin: auto;
+}
+
+.nearby-header {
+  margin-bottom: 32px;
+}
+
+.nearby-label,
+.nearby-type {
+  color: #587a6a;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+}
+
+.nearby-header h1 {
+  margin: 8px 0;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+}
+
+.nearby-header > p:last-child {
+  color: #68766f;
+}
+
+.nearby-grid {
+  display: grid;
+  gap: 22px;
+}
+
+.nearby-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.8fr);
+  overflow: hidden;
+  border: 1px solid #e2e8e2;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(28, 56, 43, 0.09);
+}
+
+.nearby-trip-main {
+  display: grid;
+  grid-template-columns: 46% 54%;
+}
+
+.nearby-photo-wrap {
+  position: relative;
+  min-height: 310px;
+}
+
+.nearby-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nearby-photo-wrap span {
+  position: absolute;
+  top: 13px;
+  left: 13px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  color: white;
+  background: #8165dc;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.nearby-info {
+  padding: 25px 22px;
+}
+
+.nearby-info h2 {
+  margin: 7px 0;
+  font-family: "Playfair Display", serif;
+  font-size: 1.5rem;
+}
+
+.nearby-location {
+  margin: 0;
+  color: #728079;
+  font-size: 0.82rem;
+}
+
+.nearby-overview {
+  margin: 18px 0;
+  color: #65736b;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+
+.nearby-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.nearby-details-button,
+.nearby-trip-button {
+  min-height: 38px;
+  border-radius: 9px;
+  padding: 8px 11px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.nearby-details-button {
+  color: #365a4c;
+  border: 1px solid #b6cfc4;
+  background: white;
+}
+
+.nearby-trip-button {
+  color: white;
+  border: 1px solid #168f78;
+  background: #168f78;
+}
+
+.nearby-details-button:hover,
+.nearby-trip-button:hover,
+.nearby-add-leg-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.96);
+}
+
+.nearby-transport-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 23px 18px;
+  border-left: 1px solid #e2e8e2;
+  background: #fbfcfb;
+}
+
+.nearby-transport-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.nearby-transport-heading strong {
+  max-width: 145px;
+  font-size: 0.74rem;
+  letter-spacing: 0.5px;
+}
+
+.nearby-transport-heading span {
+  color: #8a9690;
+  font-size: 0.64rem;
+}
+
+.nearby-transport-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.nearby-transport-tabs button {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 9px 4px;
+  border: 1px solid #e2e7e3;
+  border-radius: 10px;
+  color: #53655c;
+  background: white;
+  font-size: 0.68rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.nearby-transport-tabs button span {
+  font-size: 1rem;
+}
+
+.nearby-transport-tabs button.active {
+  color: white;
+  border-color: #8867e4;
+  background: #8867e4;
+}
+
+.nearby-transit-detail {
+  flex: 1;
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid #e6eae7;
+  border-radius: 12px;
+  background: white;
+}
+
+.nearby-transit-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.nearby-transit-title strong {
+  font-size: 0.84rem;
+}
+
+.nearby-transit-title span {
+  padding: 4px 7px;
+  border-radius: 6px;
+  color: #727d77;
+  background: #f1f3f2;
+  font-size: 0.63rem;
+  font-weight: 800;
+}
+
+.nearby-transit-detail > p {
+  margin: 15px 0;
+}
+
+.nearby-transit-detail > p small {
+  display: block;
+  color: #9aa39f;
+  font-size: 0.65rem;
+}
+
+.nearby-transit-detail > p b {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 1.25rem;
+}
+
+.nearby-transit-detail > p em {
+  color: #89948e;
+  font-size: 0.72rem;
+  font-style: normal;
+}
+
+.nearby-transit-rows {
+  display: grid;
+  gap: 9px;
+}
+
+.nearby-transit-rows span {
+  display: grid;
+  grid-template-columns: 42% 58%;
+  gap: 8px;
+  color: #89938d;
+  font-size: 0.68rem;
+}
+
+.nearby-transit-rows b {
+  color: #48574f;
+  font-weight: 700;
+  text-align: right;
+}
+
+.nearby-add-leg-button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 11px;
+  border: 1px solid #a9e1d1;
+  border-radius: 10px;
+  color: #19846c;
+  background: #ebfbf5;
+  font-size: 0.75rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* Small centered View Details popup */
+
+.nearby-details-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(20, 35, 29, 0.48);
+}
+
+.nearby-details-modal {
+  position: relative;
+  width: min(540px, 100%);
+  max-height: 78vh;
+  overflow-y: auto;
+  border-radius: 20px;
+  background: #fffdf8;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+}
+
+.nearby-details-modal > img {
+  display: block;
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+
+.nearby-modal-content {
+  padding: 22px;
+}
+
+.nearby-modal-content h2 {
+  margin: 7px 0;
+}
+
+.nearby-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.nearby-details-grid {
+  display: grid;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.nearby-details-grid div {
+  padding: 11px 12px;
+  border-radius: 11px;
+  background: #f1f6f1;
+}
+
+.nearby-details-grid small {
+  display: block;
+  color: #68786f;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.nearby-details-grid strong {
+  display: block;
+  margin-top: 4px;
+  color: #183a2d;
+  font-size: 0.83rem;
+}
+
+.nearby-details-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.nearby-details-actions a,
+.nearby-details-actions button {
+  border-radius: 9px;
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nearby-details-actions a {
+  color: #175b4a;
+  border: 1px solid #91b9ac;
+  background: white;
+}
+
+.nearby-details-actions button {
+  color: white;
+  border: 1px solid #168f78;
+  background: #168f78;
+}
+
+@media (max-width: 950px) {
+  .nearby-card {
+    grid-template-columns: 1fr;
+  }
+
+  .nearby-transport-panel {
+    border-top: 1px solid #e2e8e2;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .nearby-header,
+  .nearby-grid {
+    width: min(100% - 28px, 1080px);
+  }
+
+  .nearby-trip-main {
+    grid-template-columns: 1fr;
+  }
+
+  .nearby-photo-wrap {
+    min-height: 210px;
+  }
+
+  .nearby-transit-rows span {
+    grid-template-columns: 1fr;
+  }
+
+  .nearby-transit-rows b {
+    text-align: left;
+  }
+}

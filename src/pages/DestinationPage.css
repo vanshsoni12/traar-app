@@ -1,0 +1,268 @@
+.destination-page {
+  min-height: 100vh;
+  background: #f7f4ed;
+  color: #17251d;
+}
+
+.destination-nav {
+  width: min(1180px, calc(100% - 40px));
+  min-height: 104px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.destination-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.destination-logo {
+  color: #17251d;
+  text-decoration: none;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.destination-logo span {
+  color: #e66f3c;
+}
+
+.back-btn {
+  padding: 2px 0;
+  border: 0;
+  color: #496057;
+  background: transparent;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.back-btn:hover {
+  color: #167b69;
+  text-decoration: underline;
+}
+
+.my-trip-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 22px;
+  border-radius: 13px;
+  color: white;
+  background: #167b69;
+  box-shadow: 0 8px 18px rgba(22, 123, 105, 0.22);
+  font-size: 1rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.my-trip-button:hover {
+  transform: translateY(-2px);
+  background: #0f6757;
+}
+
+.my-trip-button span {
+  display: grid;
+  min-width: 25px;
+  height: 25px;
+  place-items: center;
+  border-radius: 50%;
+  color: #167b69;
+  background: white;
+  font-size: 0.82rem;
+}
+
+.destination-hero {
+  width: min(1180px, calc(100% - 40px));
+  min-height: 350px;
+  margin: 15px auto 0;
+  padding: 60px;
+  border-radius: 36px;
+  color: white;
+  background:
+    radial-gradient(circle at 85% 20%, #e8b66b 0, transparent 30%),
+    linear-gradient(135deg, #173b2b, #28543d);
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.destination-label,
+.explore-heading p {
+  color: #efbd72;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.destination-hero h1 {
+  margin: 10px 0;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(60px, 8vw, 105px);
+  letter-spacing: -4px;
+}
+
+.destination-subtitle {
+  max-width: 550px;
+  color: #dce6df;
+  line-height: 1.7;
+}
+
+.destination-badge {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 18px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(15px);
+}
+
+.destination-badge > span {
+  font-size: 25px;
+}
+
+.destination-badge div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.destination-badge small {
+  color: #ccd9d1;
+}
+
+.explore-section {
+  width: min(1180px, calc(100% - 40px));
+  margin: 80px auto;
+}
+
+.explore-heading h2 {
+  max-width: 650px;
+  margin-top: 8px;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(36px, 5vw, 55px);
+}
+
+.destination-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: 45px;
+}
+
+.destination-card {
+  position: relative;
+  min-height: 340px;
+  padding: 28px;
+  border-radius: 28px;
+  color: #17251d;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.destination-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 30px rgba(29, 57, 47, 0.13);
+}
+
+.card-number {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  opacity: 0.45;
+  font-size: 12px;
+}
+
+.big-icon {
+  margin-top: 35px;
+  font-size: 44px;
+}
+
+.destination-card h3 {
+  margin: 28px 0 10px;
+  font-family: "Playfair Display", serif;
+  font-size: 31px;
+}
+
+.destination-card p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.card-link {
+  display: inline-block;
+  margin-top: 15px;
+  font-weight: 800;
+}
+
+.stays-card {
+  background: #dbe9df;
+}
+
+.food-card2 {
+  background: #f2d4bf;
+}
+
+.places-card {
+  background: #e8dfc4;
+}
+
+.nearby-card {
+  background: #d7e4ea;
+}
+
+@media (max-width: 900px) {
+  .destination-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .destination-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 35px;
+  }
+}
+
+@media (max-width: 600px) {
+  .destination-nav {
+    width: calc(100% - 28px);
+    min-height: 96px;
+  }
+
+  .my-trip-button {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+
+  .destination-hero {
+    width: calc(100% - 20px);
+    padding: 40px 24px;
+    border-radius: 28px;
+  }
+
+  .destination-hero h1 {
+    font-size: 62px;
+  }
+
+  .destination-badge {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .explore-section {
+    width: calc(100% - 28px);
+    margin-top: 55px;
+  }
+
+  .destination-grid {
+    grid-template-columns: 1fr;
+  }
+}

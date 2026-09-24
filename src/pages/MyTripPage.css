@@ -1,0 +1,510 @@
+.trip-page {
+  min-height: 100vh;
+  padding: 55px 8%;
+  background: #fffaf4;
+  color: #40534f;
+}
+
+.trip-back {
+  display: inline-block;
+  margin-bottom: 35px;
+  color: #627d75;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.trip-header {
+  margin-bottom: 30px;
+}
+
+.trip-header p,
+.budget-summary > p,
+.trip-item-info > p,
+.nights-control p {
+  margin: 0 0 8px;
+  color: #af725d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.trip-header h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(40px, 5vw, 62px);
+  color: #40534f;
+}
+
+.trip-header span {
+  display: inline-block;
+  margin-top: 12px;
+  color: #788681;
+}
+
+.nights-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin: 25px 0;
+  padding: 22px 28px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #dceee1, #c9e4d1);
+}
+
+.nights-control h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+}
+
+.nights-buttons {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nights-buttons button {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #627d75;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.nights-buttons strong {
+  min-width: 75px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.trip-items {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.trip-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px;
+  border: 1px solid #e7dfd7;
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 8px 20px rgba(61, 78, 73, 0.07);
+}
+
+.trip-item-emoji {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 18px;
+  background: #e3f0e5;
+  font-size: 36px;
+}
+
+.trip-item-info {
+  flex: 1;
+}
+
+.trip-item-info h2 {
+  margin: 0 0 7px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  color: #40534f;
+}
+
+.trip-item-info span {
+  color: #788681;
+  font-size: 15px;
+}
+
+.trip-item-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.trip-item-price strong {
+  font-size: 20px;
+  color: #40534f;
+}
+
+.trip-item-price button {
+  border: 0;
+  background: transparent;
+  color: #b76662;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.budget-summary {
+  padding: 30px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #638177, #45675e);
+  color: white;
+}
+
+.budget-summary > p {
+  color: #dceee1;
+}
+
+.budget-summary h2 {
+  margin: 0 0 25px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 36px;
+  color: white;
+}
+
+.budget-input {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.budget-input span {
+  font-weight: 700;
+}
+
+.budget-input input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 10px;
+  padding: 13px;
+  background: white;
+  color: #40534f;
+  font-size: 16px;
+}
+
+.budget-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.total-row {
+  margin-bottom: 20px;
+  border-bottom: 0;
+  font-size: 20px;
+}
+
+.budget-status {
+  margin: 0 0 18px;
+  padding: 13px;
+  border-radius: 11px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.within-budget {
+  background: #dceee1;
+  color: #315b4a;
+}
+
+.over-budget {
+  background: #ffe0dc;
+  color: #9c3f3a;
+}
+
+.export-button,
+.clear-button {
+  width: 100%;
+  border-radius: 13px;
+  padding: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.export-button {
+  border: 0;
+  background: #fff0e6;
+  color: #40534f;
+}
+
+.clear-button {
+  margin-top: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: transparent;
+  color: white;
+}
+
+.budget-summary small {
+  display: block;
+  margin-top: 18px;
+  color: #e5efea;
+}
+
+.empty-trip {
+  padding: 70px 25px;
+  border: 1px solid #e7dfd7;
+  border-radius: 28px;
+  background: white;
+  text-align: center;
+}
+
+.empty-trip > div {
+  font-size: 64px;
+}
+
+.empty-trip h2 {
+  margin: 14px 0 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 32px;
+}
+
+.empty-trip p {
+  color: #788681;
+}
+
+.explore-button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #627d75;
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 700px) {
+  .trip-page {
+    padding: 35px 20px;
+  }
+
+  .nights-control {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .trip-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .trip-item-price {
+    width: 100%;
+    align-items: flex-start;
+    padding-left: 92px;
+  }
+}
+.route-planner {
+  margin: 28px 0;
+  padding: 24px;
+  border: 1px solid #c9ddd2;
+  border-radius: 18px;
+  background: #f7fbf8;
+}
+
+.route-planner > p {
+  margin: 0 0 6px;
+  color: #43806b;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.route-planner h2 {
+  margin: 0;
+  color: #173d31;
+}
+
+.route-planner > span {
+  display: block;
+  margin: 8px 0 18px;
+  color: #64786f;
+}
+
+.route-stop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid #d8e6de;
+  border-radius: 12px;
+  background: white;
+}
+
+.route-stop > strong {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: #1c765c;
+  color: white;
+}
+
+.route-stop > span {
+  font-size: 22px;
+}
+
+.route-stop div {
+  display: grid;
+  flex: 1;
+  gap: 3px;
+}
+
+.route-stop small {
+  color: #6a7d74;
+}
+
+.route-stop button {
+  min-width: 34px;
+  min-height: 34px;
+  border: 1px solid #bad2c5;
+  border-radius: 8px;
+  background: white;
+  color: #176149;
+  cursor: pointer;
+}
+
+.route-stop button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .route-planner {
+    padding: 18px;
+  }
+
+  .route-stop {
+    gap: 8px;
+  }
+}
+.route-planner {
+  margin: 28px 0;
+  padding: 24px;
+  border: 1px solid #dbe7e4;
+  border-radius: 20px;
+  background: #ffffff;
+}
+
+.route-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.route-heading p,
+.route-stop-name span {
+  margin: 0;
+  color: #6b7b78;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+.route-heading h2 {
+  margin: 5px 0;
+}
+
+.maps-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: white;
+  background: #167b69;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.route-list {
+  display: grid;
+  gap: 12px;
+}
+
+.route-stop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px;
+  border: 1px solid #e3ece9;
+  border-radius: 14px;
+  background: #f9fcfb;
+}
+
+.route-number {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: #167b69;
+  font-weight: 800;
+}
+
+.route-stop-name {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+
+.route-order-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.route-order-buttons button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #cddbd7;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+.route-order-buttons button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.transport-select {
+  display: grid;
+  gap: 5px;
+  color: #5c6d69;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.transport-select select {
+  padding: 8px;
+  border: 1px solid #cddbd7;
+  border-radius: 8px;
+  background: white;
+}
+
+.route-total {
+  margin: 18px 0 0;
+  color: #167b69;
+  font-weight: 800;
+}
+
+@media (max-width: 700px) {
+  .route-heading,
+  .route-stop {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .maps-button {
+    width: 100%;
+  }
+}

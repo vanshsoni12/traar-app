@@ -1,0 +1,139 @@
+.provider-documents-page {
+    min-height: 100vh;
+    padding: 40px 20px;
+    background: #f5faf8;
+}
+
+.provider-documents-back {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #167b69;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.provider-documents-card {
+    width: min(760px, 100%);
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #dce8e4;
+    border-radius: 22px;
+    background: white;
+}
+
+.provider-documents-card>p {
+    margin: 0;
+    color: #167b69;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+}
+
+.provider-documents-card h1 {
+    margin: 8px 0;
+}
+
+.provider-documents-card>span {
+    color: #60716d;
+}
+
+.provider-document-upload {
+    display: grid;
+    gap: 16px;
+    margin: 28px 0;
+    padding: 20px;
+    border-radius: 14px;
+    background: #f5faf8;
+}
+
+.provider-document-upload label {
+    display: grid;
+    gap: 7px;
+    color: #40514d;
+    font-weight: 700;
+}
+
+.provider-document-upload select,
+.provider-document-upload input {
+    padding: 11px;
+    border: 1px solid #cddbd7;
+    border-radius: 9px;
+    background: white;
+    font: inherit;
+}
+
+.provider-document-upload button {
+    padding: 12px;
+    border: 0;
+    border-radius: 10px;
+    color: white;
+    background: #167b69;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.provider-document-message {
+    padding: 12px;
+    border-radius: 10px;
+    color: #146c5d;
+    background: #e8f6f1;
+}
+
+.provider-document-list {
+    margin-top: 28px;
+}
+
+.provider-document-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #e3ece9;
+}
+
+.provider-document-item div:first-child {
+    display: grid;
+    gap: 5px;
+}
+
+.provider-document-item span {
+    color: #71817d;
+    font-size: 0.9rem;
+}
+
+.provider-document-item div:last-child {
+    display: flex;
+    gap: 8px;
+}
+
+.provider-document-item button {
+    padding: 8px 12px;
+    border: 1px solid #cddbd7;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.provider-document-item button:last-child {
+    color: #b42318;
+    border-color: #f3c8c4;
+}
+
+.provider-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+@media (max-width: 600px) {
+    .provider-documents-card {
+        padding: 22px;
+    }
+
+    .provider-document-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
