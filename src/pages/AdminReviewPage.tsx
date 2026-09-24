@@ -406,7 +406,7 @@ export default function AdminReviewPage() {
     <main className="admin-page">
       <header className="admin-nav">
         <Link to="/" className="admin-logo">
-          TRAAR<span>.</span>
+          <img src="/PHOTO-2026-09-25-02-23-39.jpg" alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
         </Link>
 
         <div className="admin-nav-actions">
@@ -421,7 +421,7 @@ export default function AdminReviewPage() {
             {loading ? "Refreshing..." : "Refresh data"}
           </button>
 
-          
+
           <button
             className="admin-provider-link"
             onClick={handleLogout}

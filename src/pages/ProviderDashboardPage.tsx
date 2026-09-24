@@ -367,7 +367,7 @@ export default function ProviderDashboardPage() {
     <main className="provider-dashboard-page">
       <header className="provider-nav">
         <Link to="/" className="provider-logo">
-          TRAAR<span>.</span>
+          <img src="/PHOTO-2026-09-25-02-23-39.jpg" alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
         </Link>
 
         <div className="provider-nav-actions">

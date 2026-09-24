@@ -35,7 +35,7 @@ function DestinationPage() {
       <header className="destination-nav">
         <div className="destination-brand">
           <Link to="/" className="destination-logo">
-            TRAAR<span>.</span>
+            <img src="/PHOTO-2026-09-25-02-23-39.jpg" alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
           </Link>
 
           <Link to="/" className="back-btn">

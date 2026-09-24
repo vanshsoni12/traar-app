@@ -54,6 +54,13 @@ function App() {
   const [state, setState] = useState("Madhya Pradesh");
   const [city, setCity] = useState("Bhopal");
   const [budget, setBudget] = useState("");
+  const [locationStatus, setLocationStatus] = useState("");
+  const [gettingLocation, setGettingLocation] = useState(false);
+  const [currentCoordinates, setCurrentCoordinates] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+
   const navigate = useNavigate();
 
   function handleDestinationChange(value: string) {
@@ -66,6 +73,83 @@ function App() {
     if (match) setState(match.state);
   }
 
+  function useCurrentLocation() {
+    if (!navigator.geolocation) {
+      setLocationStatus("Location is not supported by this browser.");
+      return;
+    }
+
+    setGettingLocation(true);
+    setLocationStatus("Finding your current location...");
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        setCurrentCoordinates({ latitude, longitude });
+
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`
+          );
+
+          if (!response.ok) {
+            throw new Error("Could not find the city.");
+          }
+
+          const data = await response.json();
+          const address = data.address || {};
+
+          const detectedCity =
+            address.city ||
+            address.town ||
+            address.village ||
+            address.county ||
+            address.state_district;
+
+          const detectedState = address.state;
+
+          if (detectedCity) {
+            setCity(detectedCity);
+          }
+
+          if (detectedState) {
+            setState(detectedState);
+          }
+
+          setLocationStatus(
+            detectedCity
+              ? `✓ Current location selected: ${detectedCity}${
+                  detectedState ? `, ${detectedState}` : ""
+                }`
+              : "✓ Your current location was selected."
+          );
+        } catch {
+          setLocationStatus(
+            "✓ Location found. City name could not be detected automatically."
+          );
+        }
+
+        setGettingLocation(false);
+      },
+      (error) => {
+        const message =
+          error.code === error.PERMISSION_DENIED
+            ? "Location permission was denied. Allow location access in your browser settings."
+            : "We could not detect your location. Please try again.";
+
+        setLocationStatus(message);
+        setGettingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000,
+      }
+    );
+  }
+
   function exploreDestination() {
     if (!state.trim() || !city.trim()) {
       alert("Please enter State and Destination.");
@@ -74,7 +158,12 @@ function App() {
 
     localStorage.setItem(
       "traar-search",
-      JSON.stringify({ state, city, budget })
+      JSON.stringify({
+        state,
+        city,
+        budget,
+        currentCoordinates,
+      })
     );
 
     navigate(`/destinations/${city.toLowerCase().replace(/\s+/g, "-")}`);
@@ -84,7 +173,11 @@ function App() {
     <div className="app">
       <header className="navbar">
         <div className="logo">
-          TRAAR<span>.</span>
+          <img
+            src="/PHOTO-2026-09-25-02-23-39.jpg"
+            alt="TRAAR"
+            style={{ width: "150px", height: "auto", display: "block" }}
+          />
         </div>
 
         <nav>
@@ -180,6 +273,18 @@ function App() {
                 Explore
               </button>
             </div>
+
+            <button
+              className="current-location-btn"
+              onClick={useCurrentLocation}
+              disabled={gettingLocation}
+            >
+              {gettingLocation ? "⌛ Finding location..." : "◎ Use my current location"}
+            </button>
+
+            {locationStatus && (
+              <p className="location-status">{locationStatus}</p>
+            )}
           </div>
 
           <div className="visual">
@@ -227,6 +332,7 @@ function App() {
                 onClick={() => {
                   setState(item.state);
                   setCity(item.city);
+                  setLocationStatus("");
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
               >

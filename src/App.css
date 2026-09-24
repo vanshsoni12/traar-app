@@ -716,3 +716,31 @@ select {
 .popular-card-content {
   padding: 20px 24px 24px;
 }
+.current-location-btn {
+  margin-top: 14px;
+  padding: 11px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.current-location-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+.current-location-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.location-status {
+  margin: 10px 0 0;
+  color: #e5f6e9;
+  font-size: 13px;
+  font-weight: 600;
+}
