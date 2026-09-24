@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTrip } from "../context/TripContext";
+import { supabase } from "../supabaseClient";
 import "./NearbyTripsPage.css";
 
 type TransportMode = "Bus" | "Taxi" | "Self-drive";
@@ -15,6 +16,8 @@ type TransportInfo = {
   arrival: string;
 };
 
+type TransportMap = Partial<Record<TransportMode, TransportInfo>>;
+
 type NearbyTrip = {
   id: number;
   image: string;
@@ -25,7 +28,18 @@ type NearbyTrip = {
   overview: string;
   timings: string;
   busyTime: string;
-  transport: Record<TransportMode, TransportInfo>;
+  transport: TransportMap;
+};
+
+type ProviderListing = {
+  id: string;
+  name: string;
+  description: string | null;
+  address: string;
+  price: number | null;
+  price_unit: string | null;
+  opening_hours: string | null;
+  listing_images: { storage_path: string; sort_order: number }[];
 };
 
 const nearbyTrips: NearbyTrip[] = [
@@ -203,6 +217,10 @@ export default function NearbyTripsPage() {
   const { city } = useParams();
   const { addItem } = useTrip();
 
+  const [providerTrips, setProviderTrips] = useState<NearbyTrip[]>([]);
+  const [loadingProviderTrips, setLoadingProviderTrips] = useState(true);
+  const [providerError, setProviderError] = useState("");
+
   const [selectedModes, setSelectedModes] = useState<
     Record<number, TransportMode>
   >({});
@@ -213,13 +231,87 @@ export default function NearbyTripsPage() {
     ? city.charAt(0).toUpperCase() + city.slice(1)
     : "Bhopal";
 
-  function getMode(tripId: number): TransportMode {
-    return selectedModes[tripId] || "Bus";
+  useEffect(() => {
+    async function loadProviderTrips() {
+      setLoadingProviderTrips(true);
+      setProviderError("");
+
+      const { data, error } = await supabase
+        .from("listings")
+        .select(
+          "id, name, description, address, price, price_unit, opening_hours, listing_images(storage_path, sort_order)"
+        )
+        .eq("category", "TRAVEL")
+        .eq("status", "approved")
+        .ilike("address", `%${cityName}%`)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        setProviderError("Live travel services could not be loaded yet.");
+        setLoadingProviderTrips(false);
+        return;
+      }
+
+      const formattedTrips: NearbyTrip[] = (
+        (data || []) as ProviderListing[]
+      ).map((listing, index) => {
+        const firstImage = [...(listing.listing_images || [])].sort(
+          (a, b) => a.sort_order - b.sort_order
+        )[0];
+
+        const image = firstImage
+          ? supabase.storage
+              .from("listing-images")
+              .getPublicUrl(firstImage.storage_path).data.publicUrl
+          : "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=80";
+
+        return {
+          id: 40000 + index,
+          image,
+          type: "VERIFIED LOCAL TRAVEL SERVICE",
+          name: listing.name,
+          location: listing.address,
+          distance: "Local service",
+          overview:
+            listing.description ||
+            "A verified local travel service listed by a TRAAR provider.",
+          timings:
+            listing.opening_hours || "Contact provider for available timings",
+          busyTime: "Availability depends on the provider and current demand.",
+          transport: {
+            Taxi: {
+              fare: Number(listing.price || 0),
+              duration: "Contact provider",
+              operator: listing.name,
+              first: listing.opening_hours || "Please confirm",
+              last: listing.opening_hours || "Please confirm",
+              boarding: "Your selected pickup location",
+              arrival: "Your selected destination",
+            },
+          },
+        };
+      });
+
+      setProviderTrips(formattedTrips);
+      setLoadingProviderTrips(false);
+    }
+
+    loadProviderTrips();
+  }, [cityName]);
+
+  const allNearbyTrips = [...nearbyTrips, ...providerTrips];
+
+  function getMode(trip: NearbyTrip): TransportMode {
+    return (
+      selectedModes[trip.id] ||
+      (Object.keys(trip.transport)[0] as TransportMode) ||
+      "Taxi"
+    );
   }
 
   function addTripToMyTrip(trip: NearbyTrip) {
-    const mode = getMode(trip.id);
-    const transport = trip.transport[mode];
+    const mode = getMode(trip);
+    const transport = trip.transport[mode]!;
 
     addItem({
       id: trip.id,
@@ -244,10 +336,20 @@ export default function NearbyTripsPage() {
         <p>Compare public transport, taxi and self-drive options.</p>
       </section>
 
+      {loadingProviderTrips && (
+        <p className="nearby-overview">
+          Loading verified local travel services...
+        </p>
+      )}
+
+      {providerError && (
+        <p className="nearby-overview">{providerError}</p>
+      )}
+
       <section className="nearby-grid">
-        {nearbyTrips.map((trip) => {
-          const selectedMode = getMode(trip.id);
-          const selectedTransport = trip.transport[selectedMode];
+        {allNearbyTrips.map((trip) => {
+          const selectedMode = getMode(trip);
+          const selectedTransport = trip.transport[selectedMode]!;
 
           return (
             <article className="nearby-card" key={trip.id}>
@@ -289,7 +391,11 @@ export default function NearbyTripsPage() {
 
               <aside className="nearby-transport-panel">
                 <div className="nearby-transport-heading">
-                  <strong>PUBLIC TRANSIT OPTIONS</strong>
+                  <strong>
+                    {trip.type === "VERIFIED LOCAL TRAVEL SERVICE"
+                      ? "TRAVEL SERVICE"
+                      : "PUBLIC TRANSIT OPTIONS"}
+                  </strong>
                   <span>Click icon to view</span>
                 </div>
 

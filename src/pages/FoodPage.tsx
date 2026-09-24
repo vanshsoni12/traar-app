@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTrip } from "../context/TripContext";
 import { supabase } from "../supabaseClient";
@@ -6,6 +6,7 @@ import "./FoodPage.css";
 
 type Food = {
   id: number;
+  listingId?: string;
   image: string;
   type: string;
   name: string;
@@ -16,6 +17,18 @@ type Food = {
   timings: string;
   busyTime: string;
   bestFor: string;
+};
+
+type ProviderListing = {
+  id: string;
+  name: string;
+  description: string | null;
+  address: string;
+  price: number | null;
+  price_unit: string | null;
+  amenities: string[] | null;
+  opening_hours: string | null;
+  listing_images: { storage_path: string; sort_order: number }[];
 };
 
 const foods: Food[] = [
@@ -84,6 +97,9 @@ const foods: Food[] = [
 export default function FoodPage() {
   const { city } = useParams();
   const { addItem } = useTrip();
+  const [providerFoods, setProviderFoods] = useState<Food[]>([]);
+  const [loadingProviderFoods, setLoadingProviderFoods] = useState(true);
+  const [providerError, setProviderError] = useState("");
 
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
   const [reportingFood, setReportingFood] = useState<Food | null>(null);
@@ -104,6 +120,75 @@ export default function FoodPage() {
       emoji: "🍽️",
     });
   }
+  useEffect(() => {
+    async function loadProviderFoods() {
+      setLoadingProviderFoods(true);
+      setProviderError("");
+
+      const { data, error } = await supabase
+        .from("listings")
+        .select(
+          "id, name, description, address, price, price_unit, amenities, opening_hours, listing_images(storage_path, sort_order)"
+        )
+        .eq("category", "FOOD")
+        .eq("status", "approved")
+        .ilike("address", `%${cityName}%`)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        setProviderError("Live provider food listings could not be loaded yet.");
+        setLoadingProviderFoods(false);
+        return;
+      }
+
+      const formattedFoods: Food[] = ((data || []) as ProviderListing[]).map(
+        (listing, index) => {
+          const firstImage = [...(listing.listing_images || [])].sort(
+            (a, b) => a.sort_order - b.sort_order
+          )[0];
+
+          const image = firstImage
+            ? supabase.storage
+              .from("listing-images")
+              .getPublicUrl(firstImage.storage_path).data.publicUrl
+            : "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80";
+
+          return {
+            id: 20000 + index,
+            listingId: listing.id,
+            image,
+            type: "LOCAL FOOD",
+            name: listing.name,
+            location: listing.address,
+            price:
+              listing.price === null
+                ? "Price on request"
+                : `₹${Number(listing.price).toLocaleString("en-IN")} ${listing.price_unit || ""
+                }`,
+            tripPrice: Number(listing.price || 0),
+            overview:
+              listing.description ||
+              "A verified local food listing submitted by a TRAAR provider.",
+            timings:
+              listing.opening_hours || "Please confirm timings with the restaurant",
+            busyTime:
+              "Contact the restaurant for live availability and busy hours.",
+            bestFor:
+              listing.amenities?.length
+                ? listing.amenities.join(" • ")
+                : "Local food and travellers",
+          };
+        }
+      );
+
+      setProviderFoods(formattedFoods);
+      setLoadingProviderFoods(false);
+    }
+
+    loadProviderFoods();
+  }, [cityName]);
+
+  const allFoods = [...providerFoods, ...foods];
 
   async function submitReport() {
     if (!reportingFood || !reportMessage.trim()) {
@@ -112,7 +197,7 @@ export default function FoodPage() {
     }
 
     const { error } = await supabase.from("user_reports").insert({
-      listing_id: null,
+      listing_id: reportingFood.listingId || null,
       report_type: "Food listing issue",
       message: `${reportingFood.name} (${reportingFood.location}): ${reportMessage.trim()}`,
       status: "open",
@@ -137,9 +222,16 @@ export default function FoodPage() {
       </section>
 
       {message && <p className="food-page-message">{message}</p>}
+            {loadingProviderFoods && (
+        <p className="food-page-message">Loading live local food listings...</p>
+      )}
+
+      {providerError && (
+        <p className="food-page-message">{providerError}</p>
+      )}
 
       <section className="food-grid">
-        {foods.map((food) => (
+        {allFoods.map((food) => (
           <article className="food-card" key={food.id}>
             <img
               className="food-image"

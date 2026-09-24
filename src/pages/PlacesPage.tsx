@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTrip } from "../context/TripContext";
 import { supabase } from "../supabaseClient";
@@ -6,6 +6,7 @@ import "./PlacesPage.css";
 
 type Place = {
   id: number;
+  listingId?: string;
   image: string;
   tag: string;
   name: string;
@@ -15,6 +16,18 @@ type Place = {
   timings: string;
   busyTime: string;
   bestFor: string;
+};
+
+type ProviderListing = {
+  id: string;
+  name: string;
+  description: string | null;
+  address: string;
+  price: number | null;
+  price_unit: string | null;
+  amenities: string[] | null;
+  opening_hours: string | null;
+  listing_images: { storage_path: string; sort_order: number }[];
 };
 
 const places: Place[] = [
@@ -93,6 +106,9 @@ const places: Place[] = [
 export default function PlacesPage() {
   const { city } = useParams();
   const { addItem } = useTrip();
+    const [providerPlaces, setProviderPlaces] = useState<Place[]>([]);
+  const [loadingProviderPlaces, setLoadingProviderPlaces] = useState(true);
+  const [providerError, setProviderError] = useState("");
 
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [reportingPlace, setReportingPlace] = useState<Place | null>(null);
@@ -113,6 +129,75 @@ export default function PlacesPage() {
       emoji: "📍",
     });
   }
+    useEffect(() => {
+    async function loadProviderPlaces() {
+      setLoadingProviderPlaces(true);
+      setProviderError("");
+
+      const { data, error } = await supabase
+        .from("listings")
+        .select(
+          "id, name, description, address, price, price_unit, amenities, opening_hours, listing_images(storage_path, sort_order)"
+        )
+        .eq("category", "PLACE")
+        .eq("status", "approved")
+        .ilike("address", `%${cityName}%`)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        setProviderError("Live provider places could not be loaded yet.");
+        setLoadingProviderPlaces(false);
+        return;
+      }
+
+      const formattedPlaces: Place[] = ((data || []) as ProviderListing[]).map(
+        (listing, index) => {
+          const firstImage = [...(listing.listing_images || [])].sort(
+            (a, b) => a.sort_order - b.sort_order
+          )[0];
+
+          const image = firstImage
+            ? supabase.storage
+                .from("listing-images")
+                .getPublicUrl(firstImage.storage_path).data.publicUrl
+            : "https://images.unsplash.com/photo-1609947017136-9daf32a5eb16?auto=format&fit=crop&w=1200&q=80";
+
+          return {
+            id: 30000 + index,
+            listingId: listing.id,
+            image,
+            tag: "LOCAL PLACE",
+            name: listing.name,
+            location: listing.address,
+            fee:
+              listing.price === null
+                ? "Entry details on request"
+                : `₹${Number(listing.price).toLocaleString("en-IN")} ${
+                    listing.price_unit || ""
+                  }`,
+            overview:
+              listing.description ||
+              "A verified local place listed by a TRAAR provider.",
+            timings:
+              listing.opening_hours || "Please confirm timings before visiting",
+            busyTime:
+              "Contact the place for current availability and busy periods.",
+            bestFor:
+              listing.amenities?.length
+                ? listing.amenities.join(" • ")
+                : "Visitors and local exploration",
+          };
+        }
+      );
+
+      setProviderPlaces(formattedPlaces);
+      setLoadingProviderPlaces(false);
+    }
+
+    loadProviderPlaces();
+  }, [cityName]);
+
+  const allPlaces = [...providerPlaces, ...places];
 
   async function submitReport() {
     if (!reportingPlace || !reportMessage.trim()) {
@@ -121,7 +206,7 @@ export default function PlacesPage() {
     }
 
     const { error } = await supabase.from("user_reports").insert({
-      listing_id: null,
+      listing_id: reportingPlace.listingId || null,
       report_type: "Place listing issue",
       message: `${reportingPlace.name} (${reportingPlace.location}): ${reportMessage.trim()}`,
       status: "open",
@@ -146,9 +231,18 @@ export default function PlacesPage() {
       </section>
 
       {message && <p className="places-page-message">{message}</p>}
+            {loadingProviderPlaces && (
+        <p className="places-page-message">
+          Loading live local places...
+        </p>
+      )}
+
+      {providerError && (
+        <p className="places-page-message">{providerError}</p>
+      )}
 
       <section className="places-grid">
-        {places.map((place) => (
+        {allPlaces.map((place) => (
           <article className="place-card" key={place.id}>
             <img
               className="place-image"
