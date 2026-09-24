@@ -31,18 +31,22 @@ export default function TravellerSidebar({ city = "Bhopal" }: Props) {
         {isOpen ? "←" : "☰"}
       </button>
       {isOpen && (
-  <button
-    className="sidebar-backdrop"
-    onClick={() => setIsOpen(false)}
-    aria-label="Close menu"
-  />
-)}
+        <button
+          className="sidebar-backdrop"
+          onClick={() => setIsOpen(false)}
+          aria-label="Close menu"
+        />
+      )}
 
       <aside className={isOpen ? "traveller-sidebar open" : "traveller-sidebar"}>
         <Link to="/" className="sidebar-logo">
-          TRAAR<span>.</span>
+          <img
+            src="/PHOTO-2026-09-25-02-23-39.jpg"
+            alt="TRAAR"
+            style={{ width: "150px", height: "auto", display: "block" }}
+          />
         </Link>
-        
+
 
         <p className="sidebar-label">PLAN • EXPLORE</p>
 
@@ -64,7 +68,7 @@ export default function TravellerSidebar({ city = "Bhopal" }: Props) {
         </nav>
 
         <Link to="/provider/login" className="sidebar-provider"
-        onClick={() => setIsOpen(false)}>
+          onClick={() => setIsOpen(false)}>
           List your service
         </Link>
       </aside>
