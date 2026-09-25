@@ -24,11 +24,13 @@ function DestinationPage() {
     localStorage.getItem("traar-search") || "{}"
   );
 
-  const city = savedSearch.city || formatCity(cityFromUrl || "bhopal");
-  const state = savedSearch.state || "Madhya Pradesh";
+  const city = formatCity(cityFromUrl || "bhopal");
+  const state = city === "Bhopal" ? "Madhya Pradesh" : savedSearch.state || "";
   const budget = savedSearch.budget?.trim() || "";
   const travellers = savedSearch.travellers || "1";
   const cityPath = city.toLowerCase().replace(/\s+/g, "-");
+
+  if ((cityFromUrl || 'bhopal').toLowerCase() !== 'bhopal') return <main className="destination-page"><h1>{formatCity(cityFromUrl || '')} is coming soon</h1><p>Bhopal is currently available.</p><Link to="/destinations/bhopal">Explore Bhopal</Link></main>;
 
   return (
     <div className="destination-page">
@@ -36,10 +38,6 @@ function DestinationPage() {
         <div className="destination-brand">
           <Link to="/" className="destination-logo">
             <img src="/PHOTO-2026-09-25-02-23-39.jpg" alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
-          </Link>
-
-          <Link to="/" className="back-btn">
-            ← Back to home
           </Link>
         </div>
 

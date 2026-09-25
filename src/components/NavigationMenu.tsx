@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useTrip } from '../context/TripContext';
+import { useExplorer } from "../context/ExplorerContext";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import "./NavigationMenu.css";
 
@@ -7,39 +10,68 @@ type Props = {
 };
 
 export default function TravellerSidebar({ city = "Bhopal" }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [openedRoute, setOpenedRoute] = useState<string | null>(null);
   const location = useLocation();
-  const cityPath = city.toLowerCase().replace(/\s+/g, "-");
-
-  const links = [
-    { label: "Home", to: "/" },
-    { label: "Destination", to: `/destinations/${cityPath}` },
-    { label: "Stays", to: `/destinations/${cityPath}/stays` },
-    { label: "Food", to: `/destinations/${cityPath}/food` },
-    { label: "Places", to: `/destinations/${cityPath}/places` },
-    { label: "Nearby trips", to: `/destinations/${cityPath}/nearby` },
-    { label: "My Trip", to: "/my-trip" },
-  ];
+  const isOpen = openedRoute === location.key;
+  if (openedRoute !== null && openedRoute !== location.key) setOpenedRoute(null);
+  const panel = useRef<HTMLDialogElement>(null);
+  const close = () => setOpenedRoute(null);
+  useEffect(() => {
+    if (!isOpen) return;
+    const dialog = panel.current;
+    const overflow = document.body.style.overflow;
+    dialog?.showModal();
+    document.body.style.overflow = 'hidden';
+    return () => { dialog?.close(); document.body.style.overflow = overflow; };
+  }, [isOpen]);
 
   return (
     <>
       <button
         className="sidebar-toggle"
-        onClick={() => setIsOpen(!isOpen)}
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls="traveller-sidebar"
+        onClick={() => setOpenedRoute(isOpen ? null : location.key)}
         aria-label="Toggle menu"
       >
         {isOpen ? "←" : "☰"}
       </button>
-      {isOpen && (
-        <button
-          className="sidebar-backdrop"
-          onClick={() => setIsOpen(false)}
-          aria-label="Close menu"
-        />
-      )}
+      {isOpen && createPortal(<dialog ref={panel} id="traveller-sidebar" className="traveller-sidebar open" aria-label="Travel navigation" onCancel={close} onClick={(event) => {
+        if (event.target !== event.currentTarget) return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) close();
+      }}>
+        <button type="button" className="sidebar-close" aria-label="Close menu" onClick={close}>×</button>
+        <SidebarContent city={city} onNavigate={close} />
+      </dialog>, document.body)}
+    </>
+  );
+}
 
-      <aside className={isOpen ? "traveller-sidebar open" : "traveller-sidebar"}>
-        <Link to="/" className="sidebar-logo">
+export function SidebarContent({ city = 'Bhopal', onNavigate }: Props & { onNavigate?: () => void }) {
+  const ex = useExplorer();
+  const { items } = useTrip();
+  const location = useLocation();
+  const close = () => onNavigate?.();
+  const cityPath = city.toLowerCase().replace(/\s+/g, "-");
+
+  const links = [
+    { label: "Home", to: "/" },
+    { label: "Destination Overview", to: `/destinations/${cityPath}` },
+    { label: "Stays", to: `/destinations/${cityPath}/stays` },
+    { label: "Food", to: `/destinations/${cityPath}/food` },
+    { label: "Places to Visit", to: `/destinations/${cityPath}/places` },
+    { label: "Nearby Trips", to: `/destinations/${cityPath}/nearby` },
+    { label: `My Trip (${items.length})`, to: "/my-trip" },
+    { label: "Search", to: "/search" },
+    { label: `Saved Favourites (${ex.favourites.length})`, to: "/favourites" },
+    { label: "Help Booth", to: "/help" },
+  ];
+
+  return <>
+        <Link to="/" className="sidebar-logo" onClick={close}>
+
           <img
             src="/PHOTO-2026-09-25-02-23-39.jpg"
             alt="TRAAR"
@@ -55,7 +87,8 @@ export default function TravellerSidebar({ city = "Bhopal" }: Props) {
             <Link
               key={link.label}
               to={link.to}
-              onClick={() => setIsOpen(false)}
+              onClick={() => { close(); ex.setQuery(""); }}
+              aria-current={location.pathname === link.to ? "page" : undefined}
               className={
                 location.pathname === link.to
                   ? "sidebar-link sidebar-link-active"
@@ -65,13 +98,15 @@ export default function TravellerSidebar({ city = "Bhopal" }: Props) {
               {link.label}
             </Link>
           ))}
+          <button className="sidebar-link" onClick={() => { close(); ex.setModal('compare'); }}>Compare ({ex.comparison.length})</button>
+          <button className="sidebar-link" onClick={() => { close(); ex.setModal('starting'); }}>Starting point</button>
+          <button className="sidebar-link" onClick={() => { close(); ex.setReadCount(ex.notifications.length); ex.setModal('notifications'); }}>Notifications</button>
+          <button className="sidebar-link" onClick={() => { close(); ex.setModal('profile'); }}>Profile</button>
         </nav>
 
         <Link to="/provider/login" className="sidebar-provider"
-          onClick={() => setIsOpen(false)}>
+          onClick={() => close()}>
           List your service
         </Link>
-      </aside>
-    </>
-  );
+  </>;
 }

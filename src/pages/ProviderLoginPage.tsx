@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import "./ProviderLoginPage.css";
 
@@ -57,9 +57,9 @@ export default function ProviderLoginPage() {
 
   return (
     <main className="provider-login-page">
-      <Link to="/" className="provider-login-logo">
+      <div className="provider-login-logo">
         <img src="/PHOTO-2026-09-25-02-23-39.jpg" alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
-      </Link>
+      </div>
 
       <section className="provider-login-card">
         <p className="provider-login-label">PROVIDER PORTAL</p>

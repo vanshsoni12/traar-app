@@ -1,19 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
+import { useExplorer } from "../context/ExplorerContext";
+import { itemPaise } from "../utils/budget";
+import { useSelectedCity } from "../context/CityContext";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTrip } from "../context/TripContext";
 import "./MyTripPage.css";
 
-type TransportMode = "Walk" | "Bus" | "Auto" | "Cab";
-
-const transportPrices: Record<TransportMode, number> = {
-  Walk: 0,
-  Bus: 15,
-  Auto: 80,
-  Cab: 180,
-};
-
 export default function MyTripPage() {
-  const { items, removeItem, clearTrip } = useTrip();
+  const { city } = useSelectedCity();
+  const { items, removeItem, clearTrip, setQuantity, replaceTrip } = useTrip();
+  const { persons, setPersons, notify } = useExplorer();
+  const [hasCopy, setHasCopy] = useState(() => Boolean(localStorage.getItem("traar-trip-copy")));
 
   const [nights, setNights] = useState(() => {
     const savedNights = Number(localStorage.getItem("traar-nights"));
@@ -24,18 +21,6 @@ export default function MyTripPage() {
     return Number(localStorage.getItem("traar-budget")) || 0;
   });
 
- const [routeOrder, setRouteOrder] = useState<number[]>(() => {
-    const savedRoute = localStorage.getItem("traar-route-order");
-    return savedRoute ? JSON.parse(savedRoute) : [];
-  });
-
-  const [transportPerLeg, setTransportPerLeg] = useState<
-    Record<string, TransportMode>
-  >(() => {
-    const savedTransport = localStorage.getItem("traar-route-transport");
-    return savedTransport ? JSON.parse(savedTransport) : {};
-  });
-
   useEffect(() => {
     localStorage.setItem("traar-nights", String(nights));
   }, [nights]);
@@ -44,103 +29,17 @@ export default function MyTripPage() {
     localStorage.setItem("traar-budget", String(budget));
   }, [budget]);
 
-  useEffect(() => {
-    const itemIds = items.map((item) => item.id);
-
-    setRouteOrder((current) => {
-      const remaining = current.filter((id) => itemIds.includes(id));
-      const newIds = itemIds.filter((id) => !remaining.includes(id));
-      return [...remaining, ...newIds];
-    });
-  }, [items]);
-
-  useEffect(() => {
-    localStorage.setItem("traar-route-order", JSON.stringify(routeOrder));
-  }, [routeOrder]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "traar-route-transport",
-      JSON.stringify(transportPerLeg)
-    );
-  }, [transportPerLeg]);
-
   function itemTotal(item: (typeof items)[number]) {
-    return item.category === "STAY" ? item.price * nights : item.price;
+    return itemPaise(item, persons, nights) / 100;
   }
 
-  const routeItems = useMemo(() => {
-    return routeOrder
-      .map((id) => items.find((item) => item.id === id))
-      .filter(Boolean) as (typeof items)[number][];
-  }, [routeOrder, items]);
-
-  const selectionsTotal = items.reduce(
-    (sum, item) => sum + itemTotal(item),
-    0
-  );
-
-  const transportTotal = routeItems.slice(0, -1).reduce((sum, item) => {
-    const mode = transportPerLeg[item.id] || "Bus";
-    return sum + transportPrices[mode];
-  }, 0);
-
-  const total = selectionsTotal + transportTotal;
+  const transportTotal = items.filter((item) => item.category === 'TRAVEL' || item.category === 'NEARBY TRIP').reduce((sum, item) => sum + itemTotal(item), 0);
+  const totalPaise = items.reduce((sum, item) => sum + itemPaise(item, persons, nights), 0);
+  const total = totalPaise / 100;
   const hasBudget = budget > 0;
   const difference = budget - total;
 
-  function moveStop(index: number, direction: "up" | "down") {
-    const nextIndex = direction === "up" ? index - 1 : index + 1;
-
-    if (nextIndex < 0 || nextIndex >= routeOrder.length) return;
-
-    setRouteOrder((current) => {
-      const next = [...current];
-      [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
-      return next;
-    });
-  }
-
-  function updateTransport(itemId: number, mode: TransportMode) {
-    setTransportPerLeg((current) => ({
-      ...current,
-      [itemId]: mode,
-    }));
-  }
-
-  function openRouteInMaps() {
-    if (routeItems.length === 0) return;
-
-    const names = routeItems.map((item) => `${item.name}, Bhopal`);
-
-    const origin = encodeURIComponent(names[0]);
-    const destination = encodeURIComponent(names[names.length - 1]);
-    const waypoints =
-      names.length > 2
-        ? `&waypoints=${encodeURIComponent(names.slice(1, -1).join("|"))}`
-        : "";
-
-    const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}${waypoints}&travelmode=transit`;
-
-    window.open(mapsUrl, "_blank", "noopener,noreferrer");
-  }
-
   function exportPlan() {
-    const routeText =
-      routeItems.length > 0
-        ? routeItems
-            .map((item, index) => {
-              const transport =
-                index < routeItems.length - 1
-                  ? ` → ${transportPerLeg[item.id] || "Bus"} (₹${
-                      transportPrices[transportPerLeg[item.id] || "Bus"]
-                    })`
-                  : "";
-              return `${index + 1}. ${item.name}${transport}`;
-            })
-            .join("\n")
-        : "No route stops added yet.";
-
     const planText = [
       "TRAAR - My Trip Plan",
       "",
@@ -154,9 +53,6 @@ export default function MyTripPage() {
             item
           )}`
       ),
-      "",
-      "Suggested route:",
-      routeText,
       "",
       `Transport estimate: ₹${transportTotal}`,
       `Estimated total: ₹${total}`,
@@ -179,14 +75,18 @@ export default function MyTripPage() {
 
   return (
     <main className="trip-page">
-      <Link to="/destinations/bhopal" className="trip-back">
-        ← Continue exploring
-      </Link>
 
       <section className="trip-header">
         <p>YOUR TRAVEL PLAN</p>
-        <h1>My Trip</h1>
-        <span>{items.length} selection(s)</span>
+        <h1>▣ My Trip Planner &amp; Budget Engine</h1>
+        <span>{items.length} selection(s) · Plan transparently, travel thoughtfully.</span>
+        <div className="ex-trip-tools">
+          <button onClick={() => { localStorage.setItem("traar-trip-copy", JSON.stringify({ items, nights, budget, persons })); setHasCopy(true); notify("A duplicate snapshot of this trip was saved on this device."); }}>⧉ Duplicate Trip</button>
+          {hasCopy && <button onClick={() => { try { const copy = JSON.parse(localStorage.getItem("traar-trip-copy") || "null"); if (!copy || !Array.isArray(copy.items)) return; replaceTrip(copy.items); setNights(copy.nights || 1); setBudget(copy.budget || 0); setPersons(copy.persons || 1); notify("Saved trip copy restored."); } catch { notify("The saved trip copy could not be restored."); } }}>Restore saved copy</button>}
+          <button onClick={async () => { const text = `TRAAR trip for ${persons} traveller(s)\n${items.map((item) => `${item.name}: ₹${itemTotal(item)}`).join("\n")}\nEstimated total: ₹${total}`; try { if (navigator.share) await navigator.share({ title: "My TRAAR Trip", text }); else { await navigator.clipboard.writeText(text); notify("Trip summary copied to clipboard."); } } catch { notify("Sharing was cancelled or unavailable. You can export your plan instead."); } }}>⇄ Share Trip</button>
+          <button onClick={() => window.print()}>↓ Export Estimate (PDF)</button>
+        </div>
+        <div className="ex-trip-controls"><label>Travellers: <button disabled={persons <= 1} onClick={() => setPersons(Math.max(1, persons - 1))}>−</button> <b>{persons}</b> <button disabled={persons >= 99} onClick={() => setPersons(Math.min(99, persons + 1))}>+</button></label><label>Budget limit: ₹ <input aria-label="Budget limit" type="number" min="0" step="1" value={budget || ""} onChange={(event) => setBudget(Math.max(0, Number(event.target.value)))} /><button onClick={() => setBudget(Math.max(0, budget - 1000))}>−1k</button><button onClick={() => setBudget(budget + 1000)}>+1k</button></label></div>
       </section>
 
       {items.length === 0 ? (
@@ -195,8 +95,8 @@ export default function MyTripPage() {
           <h2>Your trip is empty</h2>
           <p>Add stays, food, places and nearby trips to create your plan.</p>
 
-          <Link to="/destinations/bhopal" className="explore-button">
-            Explore Bhopal →
+          <Link to={`/destinations/${city.toLowerCase().replace(/\s+/g, "-")}`} className="explore-button">
+            Explore {city} →
           </Link>
         </section>
       ) : (
@@ -227,11 +127,12 @@ export default function MyTripPage() {
           <section className="trip-items">
             {items.map((item) => (
               <article className="trip-item" key={item.id}>
-                <div className="trip-item-emoji">{item.emoji}</div>
+                <div className="trip-item-emoji">{item.image ? <img src={item.image} alt="" /> : item.emoji}</div>
 
                 <div className="trip-item-info">
                   <p>{item.category}</p>
                   <h2>{item.name}</h2>
+                  {item.location && <small>{item.location}</small>}
                   <span>
                     {item.category === "STAY"
                       ? `₹${item.price.toLocaleString(
@@ -242,88 +143,20 @@ export default function MyTripPage() {
                 </div>
 
                 <div className="trip-item-price">
-                  <strong>₹{itemTotal(item).toLocaleString("en-IN")}</strong>
+                  <div className="ex-quantity"><button aria-label={`Decrease ${item.name} quantity`} disabled={(item.quantity || 1) <= 1} onClick={() => setQuantity(item.id, (item.quantity || 1) - 1)}>−</button><span>{item.quantity || 1}</span><button aria-label={`Increase ${item.name} quantity`} onClick={() => setQuantity(item.id, (item.quantity || 1) + 1)}>+</button></div>
+                  <strong>{item.priceKnown === false ? "Tariff to confirm" : `₹${itemTotal(item).toLocaleString("en-IN")}`}</strong>
                   <button onClick={() => removeItem(item.id)}>Remove</button>
                 </div>
               </article>
             ))}
           </section>
 
-          <section className="route-planner">
-            <div className="route-heading">
-              <div>
-                <p>ROUTE PLANNER</p>
-                <h2>Arrange your journey</h2>
-                <span>Move stops and choose transport between them.</span>
-              </div>
-
-              <button className="maps-button" onClick={openRouteInMaps}>
-                Open route in Maps →
-              </button>
-            </div>
-
-            <div className="route-list">
-              {routeItems.map((item, index) => {
-                const isLast = index === routeItems.length - 1;
-                const selectedTransport = transportPerLeg[item.id] || "Bus";
-
-                return (
-                  <div className="route-stop" key={item.id}>
-                    <div className="route-number">{index + 1}</div>
-
-                    <div className="route-stop-name">
-                      <strong>{item.name}</strong>
-                      <span>{item.category}</span>
-                    </div>
-
-                    <div className="route-order-buttons">
-                      <button
-                        disabled={index === 0}
-                        onClick={() => moveStop(index, "up")}
-                      >
-                        ↑
-                      </button>
-
-                      <button
-                        disabled={isLast}
-                        onClick={() => moveStop(index, "down")}
-                      >
-                        ↓
-                      </button>
-                    </div>
-
-                    {!isLast && (
-                      <label className="transport-select">
-                        <span>To next stop</span>
-                        <select
-                          value={selectedTransport}
-                          onChange={(event) =>
-                            updateTransport(
-                              item.id,
-                              event.target.value as TransportMode
-                            )
-                          }
-                        >
-                          <option value="Walk">Walk — ₹0</option>
-                          <option value="Bus">Bus — ₹15</option>
-                          <option value="Auto">Auto — ₹80</option>
-                          <option value="Cab">Cab — ₹180</option>
-                        </select>
-                      </label>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            <p className="route-total">
-              Local transport estimate: ₹{transportTotal.toLocaleString("en-IN")}
-            </p>
-          </section>
+          <section className="trip-transit-link"><div><h2>Plan your next excursion</h2><p>Compare bus, taxi and self-drive fares, then add the transit you need.</p></div><Link className="explore-button" to="/destinations/bhopal/nearby">Explore nearby trips →</Link></section>
 
           <section className="budget-summary">
             <p>TRIP ESTIMATE</p>
-            <h2>Budget summary</h2>
+            <h2>Budget Calculation Engine</h2><span className="ex-tag">Integer Paise</span>
+            {Object.entries(items.reduce<Record<string, number>>((totals, item) => { totals[item.category] = (totals[item.category] || 0) + itemPaise(item, persons, nights); return totals; }, {})).map(([category, paise]) => <div className="budget-row" key={category}><span>{category}</span><strong>₹{(paise / 100).toLocaleString("en-IN")}</strong></div>)}
 
             <label className="budget-input">
               <span>Your trip budget (optional)</span>
@@ -347,7 +180,7 @@ export default function MyTripPage() {
             </div>
 
             <div className="budget-row">
-              <span>Transport estimate</span>
+              <span>Selected transit (included in total)</span>
               <strong>₹{transportTotal.toLocaleString("en-IN")}</strong>
             </div>
 
@@ -370,6 +203,9 @@ export default function MyTripPage() {
               </div>
             )}
 
+            <div className="budget-row"><span>Internal integer paise</span><strong>{totalPaise} p</strong></div>
+            <button className="export-button" onClick={() => window.print()}>↓ Download PDF Estimate</button>
+            <p className="ex-muted">Use “Save as PDF” in the print dialog.</p>
             <button className="export-button" onClick={exportPlan}>
               Review & export plan →
             </button>
@@ -378,7 +214,7 @@ export default function MyTripPage() {
               Clear trip
             </button>
 
-            <small>This is an estimate, not a booking confirmation.</small>
+            <h3>Transparent Tariff Notes</h3><ol className="ex-tariff-notes"><li>This is an estimate, not a booking confirmation.</li><li>Per-person tariffs scale by travellers. Vehicle and room prices remain flat; confirm room capacity directly.</li><li>Unknown prices are excluded until confirmed. Existing guide and local transport prices are estimates.</li></ol>
           </section>
         </>
       )}

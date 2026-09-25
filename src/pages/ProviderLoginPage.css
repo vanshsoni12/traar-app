@@ -75,7 +75,7 @@
   font-size: 16px;
 }
 
-.provider-login-card button {
+.provider-login-card form button {
   border: 0;
   border-radius: 12px;
   padding: 15px;
@@ -86,7 +86,7 @@
   cursor: pointer;
 }
 
-.provider-login-card button:hover {
+.provider-login-card form button:hover {
   background: #46665d;
 }
 

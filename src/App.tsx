@@ -166,6 +166,7 @@ function App() {
       })
     );
 
+    localStorage.setItem("traar-budget", budget || "0");
     navigate(`/destinations/${city.toLowerCase().replace(/\s+/g, "-")}`);
   }
 

@@ -1,3 +1,4 @@
+import { normalizeProviderTariff } from "../utils/pricing";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
@@ -126,7 +127,7 @@ export default function AdminReviewPage() {
     if (listingResult.error) {
       setMessage(listingResult.error.message);
     } else {
-      setListings((listingResult.data || []) as Listing[]);
+      setListings(((listingResult.data || []) as Listing[]).map(normalizeProviderTariff));
     }
 
     if (profileResult.error) {
@@ -405,9 +406,9 @@ export default function AdminReviewPage() {
   return (
     <main className="admin-page">
       <header className="admin-nav">
-        <Link to="/" className="admin-logo">
+        <div className="admin-logo">
           <img src="/PHOTO-2026-09-25-02-23-39.jpg" alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
-        </Link>
+        </div>
 
         <div className="admin-nav-actions">
           <Link to="/provider" className="admin-provider-link">

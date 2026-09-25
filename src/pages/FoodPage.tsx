@@ -1,3 +1,4 @@
+import { individualTariff } from '../utils/pricing';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTrip } from "../context/TripContext";
@@ -39,8 +40,8 @@ const foods: Food[] = [
     type: "RESTAURANT & SWEETS",
     name: "Manohar Dairy & Restaurant",
     location: "M.P. Nagar, Bhopal",
-    price: "₹500 for two (estimate)",
-    tripPrice: 500,
+    price: "₹250 per person (estimate)",
+    tripPrice: 250,
     overview:
       "A popular Bhopal restaurant known for North Indian food, snacks, sweets and a lively family dining atmosphere.",
     timings: "Usually open from morning until late evening",
@@ -54,8 +55,8 @@ const foods: Food[] = [
     type: "CAFÉ",
     name: "Indian Coffee House",
     location: "New Market, TT Nagar, Bhopal",
-    price: "₹300 for two (estimate)",
-    tripPrice: 300,
+    price: "₹150 per person (estimate)",
+    tripPrice: 150,
     overview:
       "A classic café-style stop for coffee, simple Indian dishes and relaxed conversations near New Market.",
     timings: "Usually daytime to evening",
@@ -69,8 +70,8 @@ const foods: Food[] = [
     type: "TEA & SNACKS",
     name: "Jamal Bhai Tea Shop",
     location: "Bhopal Old City",
-    price: "₹100 for two (estimate)",
-    tripPrice: 100,
+    price: "₹50 per person (estimate)",
+    tripPrice: 50,
     overview:
       "A simple local tea stop for chai and snacks while exploring the streets of old Bhopal.",
     timings: "Best visited in the morning or evening",
@@ -84,8 +85,8 @@ const foods: Food[] = [
     type: "STREET FOOD",
     name: "Shahpura Street Food",
     location: "Shahpura, Bhopal",
-    price: "₹250 for two (estimate)",
-    tripPrice: 250,
+    price: "₹125 per person (estimate)",
+    tripPrice: 125,
     overview:
       "An evening food area with casual local snacks, fast food and small stalls for travellers.",
     timings: "Mostly active from evening onwards",
@@ -117,6 +118,7 @@ export default function FoodPage() {
       name: food.name,
       detail: food.price,
       price: food.tripPrice,
+      unit: "per person",
       emoji: "🍽️",
     });
   }
@@ -153,6 +155,7 @@ export default function FoodPage() {
               .getPublicUrl(firstImage.storage_path).data.publicUrl
             : "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80";
 
+          const tariff = individualTariff('FOOD', listing.price, listing.price_unit || '');
           return {
             id: 20000 + index,
             listingId: listing.id,
@@ -163,9 +166,9 @@ export default function FoodPage() {
             price:
               listing.price === null
                 ? "Price on request"
-                : `₹${Number(listing.price).toLocaleString("en-IN")} ${listing.price_unit || ""
+                : `₹${Number(tariff.price).toLocaleString("en-IN")} ${tariff.unit
                 }`,
-            tripPrice: Number(listing.price || 0),
+            tripPrice: Number(tariff.price || 0),
             overview:
               listing.description ||
               "A verified local food listing submitted by a TRAAR provider.",

@@ -3,8 +3,13 @@ import { useParams } from "react-router-dom";
 import { useTrip } from "../context/TripContext";
 import { supabase } from "../supabaseClient";
 import "./StaysPage.css";
+import {
+  coordinatesFrom, distanceKm, filterAndSortStays, matchesStay, numericValue,
+  stayDirections, stayTypeFrom, stayTypes, suggestionLabel,
+  type Coordinates, type SearchableStay, type StaySort,
+} from "../utils/staySearch";
 
-type Stay = {
+type Stay = SearchableStay & {
   id: number;
   listingId?: string;
   emoji: string;
@@ -24,6 +29,10 @@ type Stay = {
 type ProviderListing = {
   id: string;
   category: string;
+  stay_type?: string | null;
+  rating?: number | null;
+  latitude?: number | null;
+  longitude?: number | null;
   name: string;
   description: string | null;
   address: string;
@@ -38,12 +47,16 @@ type ProviderListing = {
 const stays: Stay[] = [
   {
     id: 101,
+    stayType: "Hotel",
+    rating: null,
+    coordinates: null,
     emoji: "🏰",
     type: "HERITAGE HOTEL",
     name: "Jehan Numa Palace",
     location: "Shamla Hills, Bhopal",
     price: "₹8,000 / night (estimate)",
     tripPrice: 8000,
+    numericPrice: 8000,
     image:
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
     overview:
@@ -55,12 +68,16 @@ const stays: Stay[] = [
   },
   {
     id: 102,
+    stayType: "Hotel",
+    rating: null,
+    coordinates: null,
     emoji: "🌅",
     type: "LUXURY HOTEL",
     name: "Noor-Us-Sabah Palace",
     location: "VIP Road, Kohefiza, Bhopal",
     price: "₹6,000 / night (estimate)",
     tripPrice: 6000,
+    numericPrice: 6000,
     image:
       "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
     overview:
@@ -72,12 +89,16 @@ const stays: Stay[] = [
   },
   {
     id: 103,
+    stayType: "Hotel",
+    rating: null,
+    coordinates: null,
     emoji: "🏨",
     type: "BUSINESS HOTEL",
     name: "Golden Tulip Bhopal",
     location: "M.P. Nagar Zone 1, Bhopal",
     price: "₹4,000 / night (estimate)",
     tripPrice: 4000,
+    numericPrice: 4000,
     image:
       "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80",
     overview:
@@ -89,12 +110,16 @@ const stays: Stay[] = [
   },
   {
     id: 104,
+    stayType: "Hotel",
+    rating: null,
+    coordinates: null,
     emoji: "🛏️",
     type: "HOTEL",
     name: "Hotel Amer Palace",
     location: "M.P. Nagar Zone 1, Bhopal",
     price: "₹2,500 / night (estimate)",
     tripPrice: 2500,
+    numericPrice: 2500,
     image:
       "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1200&q=80",
     overview:
@@ -112,6 +137,40 @@ export default function StaysPage() {
   const [providerStays, setProviderStays] = useState<Stay[]>([]);
   const [loadingProviderStays, setLoadingProviderStays] = useState(true);
   const [providerError, setProviderError] = useState("");
+  const [query, setQuery] = useState("");
+  const [stayType, setStayType] = useState("all");
+  const [sort, setSort] = useState<StaySort>("recommended");
+  const [travellerLocation, setTravellerLocation] = useState<Coordinates | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [locationError, setLocationError] = useState("");
+
+  function requestLocation() {
+    if (locating) return;
+    setLocationError("");
+    if (!navigator.geolocation) {
+      setLocationError("Location is unavailable in this browser. You can still search or use another sort.");
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setTravellerLocation(coordinatesFrom(position.coords.latitude, position.coords.longitude));
+        setLocating(false);
+      },
+      (error) => {
+        setLocationError(error.code === 1
+          ? "Location access was denied. Allow location in your browser and retry, or choose another sort."
+          : "Your location could not be found. Retry or choose another sort.");
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 },
+    );
+  }
+
+  function changeSort(value: StaySort) {
+    setSort(value);
+    if (value === "nearest" && !travellerLocation) requestLocation();
+  }
 
   const [selectedStay, setSelectedStay] = useState<Stay | null>(null);
   const [reportingStay, setReportingStay] = useState<Stay | null>(null);
@@ -121,7 +180,7 @@ export default function StaysPage() {
   const [message, setMessage] = useState("");
 
   const cityName = city
-    ? city.charAt(0).toUpperCase() + city.slice(1)
+    ? city.split("-").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")
     : "Bhopal";
 
   function openReport(stay: Stay) {
@@ -130,20 +189,24 @@ export default function StaysPage() {
     setReportMessage("");
     setReportingStay(stay);
   }
-    useEffect(() => {
+  useEffect(() => {
+    let cancelled = false;
     async function loadProviderStays() {
       setLoadingProviderStays(true);
       setProviderError("");
+      setProviderStays([]);
 
       const { data, error } = await supabase
         .from("listings")
         .select(
-          "id, category, name, description, address, price, price_unit, amenities, opening_hours, status, listing_images(storage_path, sort_order)"
+          "*, listing_images(storage_path, sort_order)"
         )
         .eq("category", "STAY")
         .eq("status", "approved")
         .ilike("address", `%${cityName}%`)
         .order("created_at", { ascending: false });
+
+      if (cancelled) return;
 
       if (error) {
         setProviderError("Live provider stays could not be loaded yet.");
@@ -163,17 +226,25 @@ export default function StaysPage() {
                 .getPublicUrl(firstImage.storage_path).data.publicUrl
             : "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80";
 
+          const amount = numericValue(listing.price);
+          const numericPrice = amount !== null && amount >= 0 ? amount : null;
+          const rating = numericValue(listing.rating);
+          const stayType = stayTypeFrom(listing.stay_type) ?? stayTypeFrom(listing.category);
           return {
+            stayType,
+            numericPrice,
+            rating: rating !== null && rating >= 0 && rating <= 5 ? rating : null,
+            coordinates: coordinatesFrom(listing.latitude, listing.longitude),
             id: 10000 + index,
             listingId: listing.id,
             emoji: "🏨",
-            type: listing.category === "STAY" ? "LOCAL STAY" : listing.category,
+            type: stayType?.toUpperCase() || "LOCAL STAY",
             name: listing.name,
             location: listing.address,
             price:
-              listing.price === null
+              numericPrice === null
                 ? "Price on request"
-                : `₹${Number(listing.price).toLocaleString("en-IN")} ${
+                : `₹${numericPrice.toLocaleString("en-IN")} ${
                     listing.price_unit || ""
                   }`,
             tripPrice: Number(listing.price || 0),
@@ -198,9 +269,13 @@ export default function StaysPage() {
     }
 
     loadProviderStays();
+    return () => { cancelled = true; };
   }, [cityName]);
 
-  const allStays = [...providerStays, ...stays];
+  const allStays = [...providerStays, ...(cityName.toLowerCase() === "bhopal" ? stays : [])];
+  const filteredStays = filterAndSortStays(allStays, query, stayType, sort, travellerLocation);
+  const suggestions = allStays.filter((stay) => matchesStay(stay, query) &&
+    (stayType === "all" || stay.stayType === stayType)).slice(0, 12);
 
   async function submitReport() {
     if (!reportingStay) return;
@@ -250,8 +325,57 @@ export default function StaysPage() {
         <p className="stay-report-error">{providerError}</p>
       )}
 
-      <section className="stays-grid">
-       {allStays.map((stay) => (
+      <section className="stay-search-controls" aria-label="Find a stay">
+        <div className="stay-search-field">
+          <label htmlFor="stay-search">Search stays</label>
+          <div className="stay-search-input">
+            <input id="stay-search" type="search" list="stay-suggestions"
+              value={query} onChange={(event) => setQuery(event.target.value)}
+              placeholder="Stay name, area or address" autoComplete="off" />
+            <button type="button" onClick={() => setQuery("")} disabled={!query}>Clear search</button>
+          </div>
+          <datalist id="stay-suggestions">
+            {suggestions.map((stay) => <option key={stay.id} value={suggestionLabel(stay)} />)}
+          </datalist>
+        </div>
+        <div>
+          <label htmlFor="stay-type">Stay type</label>
+          <select id="stay-type" value={stayType} onChange={(event) => setStayType(event.target.value)}>
+            <option value="all">All types</option>
+            {stayTypes.map((type) => <option key={type} value={type}>{type}</option>)}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="stay-sort">Sort by</label>
+          <select id="stay-sort" value={sort} onChange={(event) => changeSort(event.target.value as StaySort)}>
+            <option value="recommended">Recommended/default</option>
+            <option value="nearest">Nearest first</option>
+            <option value="price">Price: low to high</option>
+            <option value="rating">Rating: highest first</option>
+          </select>
+        </div>
+      </section>
+      <div className="stay-search-status" role="status">
+        <p>{filteredStays.length} stay{filteredStays.length === 1 ? "" : "s"} found{loadingProviderStays ? " · Loading more stays…" : ""}</p>
+        {sort === "nearest" && <>
+          {locating && <p>Finding your location…</p>}
+          {locationError && <p>{locationError} <button type="button" onClick={requestLocation} disabled={locating}>Retry location</button></p>}
+          {travellerLocation && <p>Sorted by straight-line distance. Stays without a location appear last.</p>}
+          {!loadingProviderStays && !filteredStays.some((stay) => stay.coordinates) &&
+            <p>Locations are not available for these stays, so their distance order is unchanged.</p>}
+        </>}
+        {sort === "rating" && !loadingProviderStays && !filteredStays.some((stay) => stay.rating !== null) &&
+          <p>Ratings are not available for these stays, so their order is unchanged.</p>}
+      </div>
+      {!loadingProviderStays && filteredStays.length === 0 && (
+        <div className="stay-search-empty">
+          <h2>No stays found</h2>
+          <p>Try another name, area or stay type.</p>
+          {(query || stayType !== "all") && <button type="button" onClick={() => { setQuery(""); setStayType("all"); }}>Reset search and type</button>}
+        </div>
+      )}
+      <section className="stays-grid" aria-label="Stay listings" aria-busy={loadingProviderStays}>
+       {filteredStays.map((stay) => (
           <article className="stay-card" key={stay.id}>
             <img
               className="stay-image"
@@ -264,6 +388,9 @@ export default function StaysPage() {
               <h2>{stay.name}</h2>
               <p className="stay-location">📍 {stay.location}</p>
 
+              {stay.rating !== null && <p className="stay-sort-detail">★ {stay.rating} / 5</p>}
+              {sort === "nearest" && travellerLocation && stay.coordinates &&
+                <p className="stay-sort-detail">{distanceKm(travellerLocation, stay.coordinates)?.toFixed(1)} km away · straight-line</p>}
               <div className="stay-footer">
                 <strong>{stay.price}</strong>
 
@@ -362,13 +489,11 @@ export default function StaysPage() {
 
                 <div className="stay-details-actions">
                   <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      `${selectedStay.name}, ${selectedStay.location}`
-                    )}`}
+                    href={stayDirections(selectedStay)}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Directions ↗
+                    📍 Way to reach
                   </a>
 
                   <button

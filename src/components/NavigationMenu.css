@@ -95,3 +95,10 @@
   background: transparent;
   cursor: default;
 }
+.traveller-sidebar { overflow-y: auto; }
+.sidebar-menu button.sidebar-link { width: 100%; border: 0; text-align: left; font: inherit; cursor: pointer; }
+
+/* Native dialog keeps the closed menu out of focus order and traps focus when open. */
+dialog.traveller-sidebar { margin: 0; width: min(300px, 86vw); max-width: none; height: 100dvh; max-height: none; border: 0; border-right: 1px solid #d8e5dc; border-radius: 0; color: #26433a; overscroll-behavior: contain; }
+dialog.traveller-sidebar::backdrop { background: rgb(16 45 35 / 35%); }
+.sidebar-close { position: absolute; top: 18px; right: 18px; width: 42px; height: 42px; border: 1px solid #b8c6bd; border-radius: 10px; background: white; color: #164b3b; font-size: 24px; cursor: pointer; }

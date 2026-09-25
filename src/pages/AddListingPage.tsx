@@ -1,4 +1,7 @@
-import { useState, type FormEvent } from "react";
+import ProviderLocationFields from "../components/ProviderLocationFields";
+import { formatListingAddress } from "../utils/listingLocation";
+import { cityCentre } from "../context/ExplorerContext";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import "./AddListingPage.css";
@@ -7,10 +10,17 @@ import "./AddListingPage.css";
 export default function AddListingPage() {
   const navigate = useNavigate();
 
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+  const [importingPhoto, setImportingPhoto] = useState(false);
+  const [providerId, setProviderId] = useState("");
+  const [coordinateSource, setCoordinateSource] = useState("Provider entered coordinates");
   const [category, setCategory] = useState("STAY");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
+  const [listingState, setListingState] = useState("Madhya Pradesh");
+  const [listingCity, setListingCity] = useState("Bhopal");
   const [phone, setPhone] = useState("");
   const [price, setPrice] = useState("");
   const [priceUnit, setPriceUnit] = useState("per night");
@@ -24,6 +34,21 @@ export default function AddListingPage() {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  useEffect(() => { supabase.auth.getUser().then(({ data }) => setProviderId(data.user?.id || "")); }, []);
+  useEffect(() => { const urls = photos.map((photo) => URL.createObjectURL(photo)); setPhotoPreviews(urls); return () => urls.forEach((url) => URL.revokeObjectURL(url)); }, [photos]);
+  async function importPhoto() {
+    setMessage("");
+    try {
+      const url = new URL(photoUrl);
+      if (url.protocol !== "https:") throw new Error("Use an HTTPS image URL.");
+      setImportingPhoto(true);
+      const response = await fetch(url.href);
+      if (!response.ok) throw new Error("The image could not be downloaded.");
+      const blob = await response.blob();
+      if (!["image/jpeg", "image/png", "image/webp"].includes(blob.type) || blob.size > 10 * 1024 * 1024) throw new Error("Use a PNG, JPEG or WebP image smaller than 10 MB.");
+      setPhotos((current) => [...current, new File([blob], `linked-photo-${Date.now()}.${blob.type.split("/")[1]}`, { type: blob.type })]); setPhotoUrl("");
+    } catch (error) { setMessage(error instanceof Error ? error.message + " You can also upload the image from your device." : "Image unavailable. Upload from your device instead."); } finally { setImportingPhoto(false); }
+  }
   async function submitListing(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
@@ -36,7 +61,7 @@ export default function AddListingPage() {
       return;
     }
 
-    if (!name || !address || !price) {
+    if (!name.trim() || !address.trim() || !price || !listingState || !listingCity.trim()) {
       setMessage("Please fill the required listing details.");
       return;
     }
@@ -46,6 +71,7 @@ export default function AddListingPage() {
       return;
     }
 
+    if ((latitude && (Number(latitude) < -90 || Number(latitude) > 90)) || (longitude && (Number(longitude) < -180 || Number(longitude) > 180))) { setMessage("Coordinates are outside the valid range."); return; }
     setSubmitting(true);
 
     const amenityList = amenities
@@ -60,7 +86,7 @@ export default function AddListingPage() {
         category,
         name,
         description,
-        address,
+        address: formatListingAddress(address, listingCity, listingState),
         contact_phone: phone || null,
         price: Number(price),
         price_unit: priceUnit,
@@ -69,7 +95,9 @@ export default function AddListingPage() {
         latitude: latitude ? Number(latitude) : null,
         longitude: longitude ? Number(longitude) : null,
         coordinate_source:
-          latitude && longitude ? "Provider entered coordinates" : null,
+          latitude && longitude ? (coordinateSource.includes("reference only") &&
+            Number(latitude) === cityCentre.coordinates!.latitude && Number(longitude) === cityCentre.coordinates!.longitude
+            ? coordinateSource : "Provider entered coordinates") : null,
       })
       .select("id")
       .single();
@@ -82,7 +110,7 @@ export default function AddListingPage() {
 
     const listingId = createdListing.id;
 
-    for (const photo of photos) {
+    for (const [photoIndex, photo] of photos.entries()) {
       const safeName = photo.name.replace(/[^a-zA-Z0-9._-]/g, "-");
       const path = `${user.id}/${listingId}/${crypto.randomUUID()}-${safeName}`;
 
@@ -100,6 +128,7 @@ export default function AddListingPage() {
         listing_id: listingId,
         storage_path: path,
         alt_text: name,
+        sort_order: photoIndex,
       });
 
       if (imageError) {
@@ -158,25 +187,27 @@ export default function AddListingPage() {
 
   return (
     <main className="add-listing-page">
-      <Link to="/provider" className="add-listing-back">
-        ← Back to dashboard
-      </Link>
 
       <section className="add-listing-card">
-        <p className="add-listing-label">PROVIDER PORTAL</p>
+        <p className="add-listing-label">PROVIDER VERIFICATION ONBOARDING DESK</p>
+        <p className="ex-tag">ID: {providerId || "Sign in to submit"}</p>
+        <button type="button" className="ex-sample-button" onClick={() => { setName("Sample service — replace before submitting"); setAddress("Replace with your street address or locality"); setDescription("Sample description: replace with accurate details about your business."); setAmenities("Wi-Fi, Parking"); }}>✧ Fill Sample Data</button>
         <h1>Add your service</h1>
-        <span>Complete details help travellers find your Bhopal service.</span>
+        <span>Complete details help travellers find your service.</span>
 
         <form onSubmit={submitListing}>
+          <h2 className="ex-form-section">1. Service category &amp; destination</h2>
+          <ProviderLocationFields state={listingState} city={listingCity} onStateChange={setListingState} onCityChange={setListingCity} />
           <label>
             Category
-            <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <select value={category} onChange={(e) => { const next = e.target.value; setCategory(next); setPriceUnit(next === "STAY" ? "per night" : next === "FOOD" ? "per person" : next === "PLACE" ? "per entry" : "per vehicle"); }}>
               <option value="STAY">Stay / Hotel / Hostel</option>
               <option value="FOOD">Restaurant / Food</option>
               <option value="PLACE">Tourist Place</option>
               <option value="TRAVEL">Travel / Transport</option>
             </select>
           </label>
+
 
           <label>
             Listing name *
@@ -198,13 +229,14 @@ export default function AddListingPage() {
             />
           </label>
 
+          <h2 className="ex-form-section">2. Location &amp; address</h2>
           <label>
-            Full address / locality *
+            Street address / locality *
             <input
               required
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="Example: Shamla Hills, Bhopal"
+              placeholder="Street, building or locality"
             />
           </label>
 
@@ -218,6 +250,7 @@ export default function AddListingPage() {
             />
           </label>
 
+          <h2 className="ex-form-section">3. Tariff &amp; commercials</h2>
           <div className="add-listing-two-columns">
             <label>
               Price (₹) *
@@ -240,6 +273,7 @@ export default function AddListingPage() {
                 <option value="per night">Per night</option>
                 <option value="per person">Per person</option>
                 <option value="per entry">Per entry</option>
+                <option value="per vehicle">Per vehicle</option>
                 <option value="starting price">Starting price</option>
               </select>
             </label>
@@ -263,6 +297,8 @@ export default function AddListingPage() {
             />
           </label>
 
+          {listingCity.trim().toLowerCase() === 'bhopal' && listingState === 'Madhya Pradesh' && <button type="button" onClick={() => { setLatitude(String(cityCentre.coordinates!.latitude)); setLongitude(String(cityCentre.coordinates!.longitude)); setCoordinateSource("Bhopal city reference only — property coordinates require confirmation"); }}>Use City Centre GPS (reference only)</button>}
+          <small>Replace city reference coordinates with your property's exact location before submitting.</small>
           <div className="add-listing-two-columns">
             <label>
               Latitude
@@ -287,16 +323,21 @@ export default function AddListingPage() {
             </label>
           </div>
 
+          <h2 className="ex-form-section">4. Photos, media &amp; main card cover</h2>
           <label>
             Listing photos
             <input
               type="file"
               accept="image/png,image/jpeg,image/webp"
               multiple
-              onChange={(e) => setPhotos(Array.from(e.target.files || []))}
+              onChange={(e) => setPhotos((current) => [...current, ...Array.from(e.target.files || [])])}
             />
           </label>
 
+          <div className="ex-photo-url"><input type="url" value={photoUrl} onChange={(event) => setPhotoUrl(event.target.value)} placeholder="Or paste an HTTPS image URL…" aria-label="Image URL" /><button type="button" disabled={importingPhoto || !photoUrl} onClick={importPhoto}>{importingPhoto ? "Importing…" : "Add URL"}</button></div>
+          <div className="ex-upload-previews">{photoPreviews.map((url, index) => <div key={url}><img src={url} alt={`Listing photo ${index + 1}`} /><button type="button" onClick={() => setPhotos((current) => [current[index], ...current.filter((_, i) => i !== index)])}>{index === 0 ? "✓ Main Cover" : "Set as Cover"}</button><button type="button" aria-label={`Delete photo ${index + 1}`} onClick={() => setPhotos((current) => current.filter((_, i) => i !== index))}>×</button></div>)}</div>
+          <h2 className="ex-form-section">5. Trade license &amp; compliance document</h2>
+          {proofDocument && <p>Selected file: {proofDocument.name}</p>}
           <label>
             Proof document type
             <select
@@ -322,8 +363,9 @@ export default function AddListingPage() {
           {message && <p className="add-listing-message">{message}</p>}
 
           <button type="submit" disabled={submitting}>
-            {submitting ? "Submitting..." : "Submit for review →"}
+            {submitting ? "Submitting..." : "Submit for Verification →"}
           </button>
+          <Link className="ex-back" to="/provider">Cancel</Link>
         </form>
       </section>
     </main>

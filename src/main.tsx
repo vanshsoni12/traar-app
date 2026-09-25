@@ -3,12 +3,9 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import App from "./App";
+import DirectoryPage from "./pages/DirectoryPage";
 import AppLayout from "./components/AppLayout";
 import DestinationPage from "./pages/DestinationPage";
-import StaysPage from "./pages/StaysPage";
-import FoodPage from "./pages/FoodPage";
-import PlacesPage from "./pages/PlacesPage";
-import NearbyTripsPage from "./pages/NearbyTripsPage";
 import MyTripPage from "./pages/MyTripPage";
 import { TripProvider } from "./context/TripContext";
 import ProviderLoginPage from "./pages/ProviderLoginPage";
@@ -28,6 +25,8 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<App />} />
+            <Route path="/favourites" element={<DirectoryPage key="favourites" favourites />} />
+            <Route path="/search" element={<DirectoryPage key="search" />} />
             <Route path="/help" element={<HelpBoothPage />} />
 
             <Route path="/provider/login" element={<ProviderLoginPage />} />
@@ -40,10 +39,10 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/admin/login" element={<AdminLoginPage />} />
 
             <Route path="/destinations/:city" element={<DestinationPage />} />
-            <Route path="/destinations/:city/stays" element={<StaysPage />} />
-            <Route path="/destinations/:city/food" element={<FoodPage />} />
-            <Route path="/destinations/:city/places" element={<PlacesPage />} />
-            <Route path="/destinations/:city/nearby" element={<NearbyTripsPage />} />
+            <Route path="/destinations/:city/stays" element={<DirectoryPage key="STAY" category="STAY" />} />
+            <Route path="/destinations/:city/food" element={<DirectoryPage key="FOOD" category="FOOD" />} />
+            <Route path="/destinations/:city/places" element={<DirectoryPage key="PLACE" category="PLACE" />} />
+            <Route path="/destinations/:city/nearby" element={<DirectoryPage key="TRAVEL" category="TRAVEL" />} />
 
             <Route path="/my-trip" element={<MyTripPage />} />
           </Route>

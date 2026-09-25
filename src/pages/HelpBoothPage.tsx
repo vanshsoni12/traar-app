@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import "./HelpBoothPage.css";
 
@@ -11,6 +10,9 @@ type HelpCategory =
   | "Other";
 
 const faqs = [
+  { question: "How to select a destination", answer: "Bhopal is currently available. Choose Explore Bhopal on the home page; other destinations are coming soon." },
+  { question: "How to use category pages", answer: "Choose Stays, Food, Places or Nearby Trips to open listings directly. Use Details, Ways, Save or Add to trip on a listing." },
+  { question: "How filters work", answer: "Search, type, diet and distance filters work together. Reset filters clears your choices. Distance filters need listing coordinates; unknown distances are not included." },
   {
     question: "How do I add something to My Trip?",
     answer: "Open Stays, Food, Places or Nearby Trips and select Add to My Trip.",
@@ -26,7 +28,6 @@ const faqs = [
 ];
 
 export default function HelpBoothPage() {
-  const navigate = useNavigate();
 
   const [category, setCategory] = useState<HelpCategory>(
     "General travel question"
@@ -37,7 +38,7 @@ export default function HelpBoothPage() {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
-  const [showFaqs, setShowFaqs] = useState(false);
+  const [showFaqs, setShowFaqs] = useState(true);
 
   function callNumber(number: string) {
     window.location.href = `tel:${number}`;
@@ -100,13 +101,6 @@ export default function HelpBoothPage() {
   return (
     <main className="help-page">
       <header className="help-header">
-        <button
-          className="help-back-button"
-          onClick={() => navigate(-1)}
-          aria-label="Go back"
-        >
-          ←
-        </button>
 
         <div>
           <p>TRAAR SUPPORT</p>
@@ -125,6 +119,8 @@ export default function HelpBoothPage() {
         <button onClick={() => callNumber("112")}>Call 112</button>
       </section>
 
+      <section className="help-section"><h2>Emergency &amp; Tourism Helplines</h2><p>Official district and tourism contact numbers. Tourism support has limited hours.</p><div className="help-grid">{[["Police Emergency Response", "100", "Police assistance; dial 112 for unified emergency response."], ["Medical Ambulance & Emergency", "108", "Emergency ambulance assistance."], ["Women Helpline", "1090", "Women’s safety assistance."], ["MP Tourism Official Helpline", "18002337777", "Mon–Fri 10am–6pm; Saturdays and holidays 10am–2pm; Sundays closed."], ["Unified Emergency Response", "112", "For urgent police, fire or medical assistance."]].map(([title, number, description]) => <article className="help-card" key={number}><h3>{title}</h3><p>{description}</p><strong>{number}</strong><button onClick={() => callNumber(number)}>☎ Call</button></article>)}</div><p className="ex-muted">Sources: <a href="https://bhopal.nic.in/en/helpline/" target="_blank" rel="noreferrer">Bhopal district</a> · <a href="https://www.mptourism.com/sitemap.php" target="_blank" rel="noreferrer">MP Tourism</a></p></section>
+      <section className="help-section"><h2>Local Public Transport Advice</h2><div className="help-grid">{[["City Bus Network", "Check current routes and service times with the operator before travelling.", "Keep change ready and confirm your stop with the conductor."], ["Airport Taxis", "Ask for the current fare at the official airport taxi desk before boarding.", "Keep your receipt and confirm whether tolls and parking are included."], ["Railway Cloakrooms & Retiring Rooms", "Confirm availability, eligibility and tariffs through the railway’s official channels.", "Carry your journey ticket and identification."]].map(([title, description, tip]) => <article className="help-card" key={title}><span className="ex-tag">TRANSIT GUIDANCE</span><h3>{title}</h3><p>{description}</p><p><b>Official tariff:</b> Confirm with operator; no live fare feed connected.</p><p><b>Traveller tip:</b> {tip}</p></article>)}</div></section>
       <section className="help-section">
         <div className="help-section-heading">
           <p>QUICK ASSISTANCE</p>
@@ -186,10 +182,7 @@ export default function HelpBoothPage() {
         <section className="help-faq-section">
           <p>COMMON QUESTIONS</p>
           {faqs.map((faq) => (
-            <article key={faq.question}>
-              <h3>{faq.question}</h3>
-              <p>{faq.answer}</p>
-            </article>
+            <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>
           ))}
         </section>
       )}
@@ -211,8 +204,7 @@ export default function HelpBoothPage() {
           <p>CONTACT TRAAR</p>
           <h2>Send a help request</h2>
           <span>
-            Tell us your concern. The TRAAR administration can review it in
-            Supabase.
+            Tell us your concern. The TRAAR support team can review your request.
           </span>
         </div>
 

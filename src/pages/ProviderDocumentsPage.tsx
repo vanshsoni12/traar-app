@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import "./ProviderDocumentsPage.css";
 
@@ -146,9 +146,6 @@ export default function ProviderDocumentsPage() {
 
     return (
         <main className="provider-documents-page">
-            <Link to="/provider" className="provider-documents-back">
-                ← Back to provider dashboard
-            </Link>
 
             <section className="provider-documents-card">
                 <p>PROVIDER VERIFICATION</p>

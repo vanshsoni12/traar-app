@@ -1,0 +1,396 @@
+export const stays = [
+  {
+    id: 101,
+    stayType: "Hotel",
+    rating: null,
+    coordinates: null,
+    emoji: "🏰",
+    type: "HERITAGE HOTEL",
+    name: "Jehan Numa Palace",
+    location: "Shamla Hills, Bhopal",
+    price: "₹8,000 / night (estimate)",
+    tripPrice: 8000,
+    numericPrice: 8000,
+    image:
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+    overview:
+      "A premium heritage-style stay near Bhopal’s hills, suitable for travellers looking for a peaceful and comfortable hotel experience.",
+    checkIn: "Check-in after 2:00 PM",
+    checkOut: "Check-out before 12:00 PM",
+    busyTime: "Usually busiest on Friday evening, Saturday and Sunday.",
+    bestFor: "Couples, families and heritage travellers",
+  },
+  {
+    id: 102,
+    stayType: "Hotel",
+    rating: null,
+    coordinates: null,
+    emoji: "🌅",
+    type: "LUXURY HOTEL",
+    name: "Noor-Us-Sabah Palace",
+    location: "VIP Road, Kohefiza, Bhopal",
+    price: "₹6,000 / night (estimate)",
+    tripPrice: 6000,
+    numericPrice: 6000,
+    image:
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+    overview:
+      "A scenic luxury stay close to Upper Lake and VIP Road, designed for travellers who want comfortable rooms and a relaxed city break.",
+    checkIn: "Check-in after 2:00 PM",
+    checkOut: "Check-out before 12:00 PM",
+    busyTime: "Weekends and holiday evenings can be busy.",
+    bestFor: "Families, business visitors and lake-view stays",
+  },
+  {
+    id: 103,
+    stayType: "Hotel",
+    rating: null,
+    coordinates: null,
+    emoji: "🏨",
+    type: "BUSINESS HOTEL",
+    name: "Golden Tulip Bhopal",
+    location: "M.P. Nagar Zone 1, Bhopal",
+    price: "₹4,000 / night (estimate)",
+    tripPrice: 4000,
+    numericPrice: 4000,
+    image:
+      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80",
+    overview:
+      "A practical city stay around the commercial area of M.P. Nagar, useful for business trips, short city visits and easy local access.",
+    checkIn: "Check-in after 2:00 PM",
+    checkOut: "Check-out before 12:00 PM",
+    busyTime: "Most active on weekday mornings and evenings.",
+    bestFor: "Business travellers and short city visits",
+  },
+  {
+    id: 104,
+    stayType: "Hotel",
+    rating: null,
+    coordinates: null,
+    emoji: "🛏️",
+    type: "HOTEL",
+    name: "Hotel Amer Palace",
+    location: "M.P. Nagar Zone 1, Bhopal",
+    price: "₹2,500 / night (estimate)",
+    tripPrice: 2500,
+    numericPrice: 2500,
+    image:
+      "https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1200&q=80",
+    overview:
+      "A budget-friendly hotel option near M.P. Nagar for travellers who want a convenient base for exploring Bhopal.",
+    checkIn: "Check-in after 1:00 PM",
+    checkOut: "Check-out before 11:00 AM",
+    busyTime: "Can be busier during weekends and local events.",
+    bestFor: "Students, solo travellers and budget trips",
+  },
+];
+
+export const foods = [
+  {
+    id: 201,
+    image:
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80",
+    type: "RESTAURANT & SWEETS",
+    name: "Manohar Dairy & Restaurant",
+    location: "M.P. Nagar, Bhopal",
+    price: "₹250 per person (estimate)",
+    tripPrice: 250,
+    overview:
+      "A popular Bhopal restaurant known for North Indian food, snacks, sweets and a lively family dining atmosphere.",
+    timings: "Usually open from morning until late evening",
+    busyTime: "Busy on weekends and around dinner time",
+    bestFor: "Family meals, sweets and local snacks",
+  },
+  {
+    id: 202,
+    image:
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80",
+    type: "CAFÉ",
+    name: "Indian Coffee House",
+    location: "New Market, TT Nagar, Bhopal",
+    price: "₹150 per person (estimate)",
+    tripPrice: 150,
+    overview:
+      "A classic café-style stop for coffee, simple Indian dishes and relaxed conversations near New Market.",
+    timings: "Usually daytime to evening",
+    busyTime: "Often busy during lunch and evening tea time",
+    bestFor: "Coffee, quick meals and students",
+  },
+  {
+    id: 203,
+    image:
+      "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?auto=format&fit=crop&w=1200&q=80",
+    type: "TEA & SNACKS",
+    name: "Jamal Bhai Tea Shop",
+    location: "Bhopal Old City",
+    price: "₹50 per person (estimate)",
+    tripPrice: 50,
+    overview:
+      "A simple local tea stop for chai and snacks while exploring the streets of old Bhopal.",
+    timings: "Best visited in the morning or evening",
+    busyTime: "Can be crowded during evening tea time",
+    bestFor: "Chai, snacks and a quick local break",
+  },
+  {
+    id: 204,
+    image:
+      "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=1200&q=80",
+    type: "STREET FOOD",
+    name: "Shahpura Street Food",
+    location: "Shahpura, Bhopal",
+    price: "₹125 per person (estimate)",
+    tripPrice: 125,
+    overview:
+      "An evening food area with casual local snacks, fast food and small stalls for travellers.",
+    timings: "Mostly active from evening onwards",
+    busyTime: "Most crowded on Friday, Saturday and Sunday evenings",
+    bestFor: "Street food and casual evening outings",
+  },
+];
+
+export const places = [
+  {
+    id: 301,
+    image:
+      "https://images.unsplash.com/photo-1609947017136-9daf32a5eb16?auto=format&fit=crop&w=1200&q=80",
+    tag: "LAKE & BOAT CLUB",
+    name: "Upper Lake (Bhojtal)",
+    location: "Bada Talab, Bhopal",
+    fee: "Boating available",
+    overview:
+      "Bhopal’s well-known lakefront, ideal for relaxed views, boating and a peaceful evening near the water.",
+    timings: "Best in the morning or near sunset",
+    busyTime: "Busy on weekends and public holidays",
+    bestFor: "Lake views, boating and photography",
+  },
+  {
+    id: 302,
+    image:
+      "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80",
+    tag: "HERITAGE",
+    name: "Taj-ul-Masajid",
+    location: "Kohefiza, Bhopal",
+    fee: "Historic mosque",
+    overview:
+      "A landmark mosque in Bhopal known for its grand architecture and historic importance.",
+    timings: "Visit during permitted daytime hours",
+    busyTime: "More active on Fridays and prayer times",
+    bestFor: "Architecture, heritage and respectful sightseeing",
+  },
+  {
+    id: 303,
+    image:
+      "https://images.unsplash.com/photo-1577083552431-6e5fd01988f7?auto=format&fit=crop&w=1200&q=80",
+    tag: "HERITAGE",
+    name: "Gauhar Mahal",
+    location: "VIP Road, Bhopal",
+    fee: "Historic palace",
+    overview:
+      "A restored heritage building near Upper Lake that reflects Bhopal’s royal and cultural history.",
+    timings: "Usually best explored in daylight",
+    busyTime: "Can be busy during cultural events",
+    bestFor: "Heritage walks and photography",
+  },
+  {
+    id: 304,
+    image:
+      "https://images.unsplash.com/photo-1535338454770-8be927b5a00b?auto=format&fit=crop&w=1200&q=80",
+    tag: "NATURE & WILDLIFE",
+    name: "Van Vihar National Park",
+    location: "Shyamla Hills, Bhopal",
+    fee: "Walking entry; Indian citizens. Foreign citizens pay double. Other activities cost extra.",
+    tripPrice: 25,
+    price: "Entry fee: ₹25 per person · walking entry (Indian citizens)",
+    priceSource: "https://vanviharnationalpark.org/tourist/gate-charges",
+    overview:
+      "A green wildlife park beside the lake, suitable for a calm nature-focused outing in the city.",
+    timings: "Daytime visit; check seasonal opening hours",
+    busyTime: "Usually busy on Saturday and Sunday mornings",
+    bestFor: "Nature, wildlife and family visits",
+  },
+  {
+    id: 305,
+    image:
+      "https://images.unsplash.com/photo-1564399579883-451a5d44ec08?auto=format&fit=crop&w=1200&q=80",
+    tag: "MUSEUM",
+    name: "Museum of Mankind",
+    location: "Shyamla Hills, Bhopal",
+    fee: "Entry ticket required",
+    overview:
+      "An open-air museum that introduces visitors to Indian communities, traditions and cultural heritage.",
+    timings: "Usually open during daytime",
+    busyTime: "Weekends and school holiday afternoons",
+    bestFor: "Culture, learning and family visits",
+  },
+];
+
+export const nearbyTrips = [
+  {
+    id: 401,
+    image:
+      "https://images.unsplash.com/photo-1591017403286-fd8493524e1e?auto=format&fit=crop&w=1200&q=80",
+    type: "UNESCO HERITAGE",
+    name: "Sanchi Buddhist Complex",
+    location: "Sanchi, Raisen",
+    distance: "46.2 km away",
+    overview:
+      "World-renowned Buddhist monuments and the Great Stupa, with historic gateways and peaceful open surroundings.",
+    timings: "Best in the morning or late afternoon",
+    busyTime: "Weekends and public holidays",
+    transport: {
+      Bus: {
+        fare: 65,
+        duration: "1 hr 15 mins",
+        operator: "BCLL & MP Intercity State Express",
+        first: "06:00 AM",
+        last: "08:30 PM",
+        boarding: "ISBT Hoshangabad Road, Bhopal",
+        arrival: "Sanchi Bus Stand (NH46)",
+      },
+      Taxi: {
+        fare: 1600,
+        duration: "1 hr 05 mins",
+        operator: "Private taxi / cab",
+        first: "Available all day",
+        last: "Available all day",
+        boarding: "Your selected pickup location",
+        arrival: "Sanchi Buddhist Complex",
+      },
+      "Self-drive": {
+        fare: 550,
+        duration: "1 hr 10 mins",
+        operator: "Personal vehicle",
+        first: "Flexible",
+        last: "Flexible",
+        boarding: "Your selected starting point",
+        arrival: "Sanchi Buddhist Complex parking",
+      },
+    },
+  },
+  {
+    id: 402,
+    image:
+      "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
+    type: "PREHISTORIC HERITAGE",
+    name: "Bhimbetka Rock Shelters",
+    location: "Raisen district",
+    distance: "46 km away",
+    overview:
+      "A UNESCO heritage area with prehistoric rock shelters and ancient cave paintings.",
+    timings: "Daytime visit recommended",
+    busyTime: "Weekends and school holidays",
+    transport: {
+      Bus: {
+        fare: 150,
+        duration: "1 hr 30 mins",
+        operator: "Bus + local transport",
+        first: "06:30 AM",
+        last: "07:30 PM",
+        boarding: "ISBT Hoshangabad Road, Bhopal",
+        arrival: "Bhimbetka access road",
+      },
+      Taxi: {
+        fare: 1800,
+        duration: "1 hr 10 mins",
+        operator: "Private taxi / cab",
+        first: "Available all day",
+        last: "Available all day",
+        boarding: "Your selected pickup location",
+        arrival: "Bhimbetka Rock Shelters",
+      },
+      "Self-drive": {
+        fare: 600,
+        duration: "1 hr 15 mins",
+        operator: "Personal vehicle",
+        first: "Flexible",
+        last: "Flexible",
+        boarding: "Your selected starting point",
+        arrival: "Bhimbetka parking",
+      },
+    },
+  },
+  {
+    id: 403,
+    image:
+      "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=80",
+    type: "TEMPLE & HISTORY",
+    name: "Bhojpur Temple",
+    location: "Bhojpur, Raisen",
+    distance: "28 km away",
+    overview:
+      "A historic Shiva temple with remarkable stone architecture and a calm hill-side setting.",
+    timings: "Best visited during daylight",
+    busyTime: "Weekends and religious festivals",
+    transport: {
+      Bus: {
+        fare: 90,
+        duration: "55 mins",
+        operator: "Local bus + short auto ride",
+        first: "07:00 AM",
+        last: "07:00 PM",
+        boarding: "Bhopal bus stand",
+        arrival: "Bhojpur Temple road",
+      },
+      Taxi: {
+        fare: 1100,
+        duration: "45 mins",
+        operator: "Private taxi / cab",
+        first: "Available all day",
+        last: "Available all day",
+        boarding: "Your selected pickup location",
+        arrival: "Bhojpur Temple",
+      },
+      "Self-drive": {
+        fare: 400,
+        duration: "50 mins",
+        operator: "Personal vehicle",
+        first: "Flexible",
+        last: "Flexible",
+        boarding: "Your selected starting point",
+        arrival: "Bhojpur Temple parking",
+      },
+    },
+  },
+  {
+    id: 404,
+    image:
+      "https://images.unsplash.com/photo-1577083552431-6e5fd01988f7?auto=format&fit=crop&w=1200&q=80",
+    type: "HERITAGE",
+    name: "Islamnagar Fort",
+    location: "Berasia Road, Bhopal",
+    distance: "11 km away",
+    overview:
+      "A nearby historical fort complex for a short heritage outing from Bhopal.",
+    timings: "Daytime visit recommended",
+    busyTime: "Usually busier on Sunday afternoons",
+    transport: {
+      Bus: {
+        fare: 40,
+        duration: "35 mins",
+        operator: "City bus / local transport",
+        first: "07:00 AM",
+        last: "08:00 PM",
+        boarding: "Central Bhopal",
+        arrival: "Islamnagar Fort stop",
+      },
+      Taxi: {
+        fare: 450,
+        duration: "25 mins",
+        operator: "Auto-rickshaw / taxi",
+        first: "Available all day",
+        last: "Available all day",
+        boarding: "Your selected pickup location",
+        arrival: "Islamnagar Fort",
+      },
+      "Self-drive": {
+        fare: 180,
+        duration: "25 mins",
+        operator: "Personal vehicle",
+        first: "Flexible",
+        last: "Flexible",
+        boarding: "Your selected starting point",
+        arrival: "Islamnagar Fort parking",
+      },
+    },
+  },
+];

@@ -1,3 +1,4 @@
+import { normalizeSavedTariff } from '../utils/pricing';
 import {
   createContext,
   useContext,
@@ -12,7 +13,12 @@ export type TripItem = {
   name: string;
   detail: string;
   price: number;
+  priceKnown?: boolean;
   emoji: string;
+  image?: string;
+  location?: string;
+  unit?: string;
+  quantity?: number;
 };
 
 type TripContextType = {
@@ -20,6 +26,8 @@ type TripContextType = {
   addItem: (item: TripItem) => void;
   removeItem: (id: number) => void;
   clearTrip: () => void;
+  replaceTrip: (items: TripItem[]) => void;
+  setQuantity: (id: number, quantity: number) => void;
 };
 
 const TripContext = createContext<TripContextType | null>(null);
@@ -28,7 +36,7 @@ export function TripProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<TripItem[]>(() => {
     const savedItems = localStorage.getItem("traar-trip");
 
-    return savedItems ? JSON.parse(savedItems) : [];
+    return savedItems ? (JSON.parse(savedItems) as TripItem[]).map(normalizeSavedTariff) : [];
   });
 
   useEffect(() => {
@@ -42,11 +50,10 @@ export function TripProvider({ children }: { children: ReactNode }) {
       );
 
       if (alreadyAdded) {
-        alert(`${item.name} is already in My Trip.`);
         return currentItems;
       }
 
-      return [...currentItems, item];
+      return [...currentItems, normalizeSavedTariff(item)];
     });
   }
 
@@ -67,6 +74,8 @@ export function TripProvider({ children }: { children: ReactNode }) {
         addItem,
         removeItem,
         clearTrip,
+        replaceTrip: (nextItems) => setItems(nextItems.map(normalizeSavedTariff)),
+        setQuantity: (id, quantity) => setItems((current) => current.map((item) => item.id === id ? { ...item, quantity: Math.max(1, Math.min(99, quantity)) } : item)),
       }}
     >
       {children}

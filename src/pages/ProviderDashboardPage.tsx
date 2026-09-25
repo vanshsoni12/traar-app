@@ -1,3 +1,9 @@
+import { normalizeProviderTariff } from "../utils/pricing";
+import ProviderLocationFields from "../components/ProviderLocationFields";
+import { formatListingAddress, parseListingAddress } from "../utils/listingLocation";
+import { classificationFields } from "../utils/listingClassification";
+import { coordinatesFrom } from "../utils/staySearch";
+import Modal from "../components/Modal";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
@@ -12,6 +18,12 @@ type ListingImage = {
 type Listing = {
   id: string;
   category: string;
+  stay_type?: string | null;
+  food_type?: string | null;
+  place_type?: string | null;
+  travel_type?: string | null;
+  diet?: string | null;
+  coordinate_source?: string | null;
   name: string;
   description: string | null;
   address: string;
@@ -28,6 +40,10 @@ type Listing = {
 };
 
 type EditForm = {
+  state: string;
+  city: string;
+  listingType: string;
+  diet: string;
   name: string;
   description: string;
   address: string;
@@ -43,6 +59,9 @@ type EditForm = {
 export default function ProviderDashboardPage() {
   const navigate = useNavigate();
 
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [preview, setPreview] = useState<Listing | null>(null);
+  const [providerId, setProviderId] = useState("");
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -51,6 +70,10 @@ export default function ProviderDashboardPage() {
   const [selectedPhotos, setSelectedPhotos] = useState<File[]>([]);
 
   const [form, setForm] = useState<EditForm>({
+    state: "",
+    city: "",
+    listingType: "",
+    diet: "",
     name: "",
     description: "",
     address: "",
@@ -77,10 +100,11 @@ export default function ProviderDashboardPage() {
       return;
     }
 
+    setProviderId(authData.user.id);
     const { data, error } = await supabase
       .from("listings")
       .select(
-        "id, category, name, description, address, contact_phone, price, price_unit, amenities, opening_hours, latitude, longitude, status, rejection_reason, listing_images(id, storage_path, sort_order)"
+        "*, listing_images(id, storage_path, sort_order)"
       )
       .eq("provider_id", authData.user.id)
       .order("created_at", { ascending: false });
@@ -88,7 +112,7 @@ export default function ProviderDashboardPage() {
     if (error) {
       setMessage(error.message);
     } else {
-      setListings((data || []) as Listing[]);
+      setListings(((data || []) as Listing[]).map(normalizeProviderTariff));
     }
 
     setLoading(false);
@@ -111,10 +135,15 @@ export default function ProviderDashboardPage() {
     setSelectedPhotos([]);
     setEditingListing(listing);
 
+    const savedLocation = parseListingAddress(listing.address || "");
     setForm({
+      state: savedLocation.state,
+      city: savedLocation.city,
+      listingType: (listing.category === 'STAY' ? listing.stay_type : listing.category === 'FOOD' ? listing.food_type : listing.category === 'PLACE' ? listing.place_type : listing.travel_type) || "",
+      diet: listing.diet || "",
       name: listing.name || "",
       description: listing.description || "",
-      address: listing.address || "",
+      address: savedLocation.address,
       contactPhone: listing.contact_phone || "",
       price: listing.price === null ? "" : String(listing.price),
       priceUnit: listing.price_unit || "",
@@ -184,11 +213,15 @@ export default function ProviderDashboardPage() {
   async function saveListing(resubmitForReview: boolean) {
     if (!editingListing) return;
 
-    if (!form.name.trim() || !form.address.trim()) {
-      setMessage("Listing name and address are required.");
+    if (!form.name.trim() || !form.address.trim() || !form.state || !form.city.trim()) {
+      setMessage("Listing name, state, city/destination and street address are required.");
       return;
     }
 
+    if ((form.latitude || form.longitude) && !coordinatesFrom(form.latitude, form.longitude)) {
+      setMessage("Enter valid latitude and longitude, or leave both blank.");
+      return;
+    }
     const { data: authData } = await supabase.auth.getUser();
 
     if (!authData.user) {
@@ -204,10 +237,15 @@ export default function ProviderDashboardPage() {
       .map((item) => item.trim())
       .filter(Boolean);
 
+    const classification = classificationFields(editingListing.category, form.listingType, form.diet);
     const updateData = {
+      ...Object.fromEntries(Object.entries(classification).filter(([key, value]) => value !== null || key in editingListing)),
+      coordinate_source: form.latitude && form.longitude
+        ? (Number(form.latitude) === editingListing.latitude && Number(form.longitude) === editingListing.longitude
+          ? editingListing.coordinate_source || "Provider entered coordinates" : "Provider entered coordinates") : null,
       name: form.name.trim(),
       description: form.description.trim() || null,
-      address: form.address.trim(),
+      address: formatListingAddress(form.address, form.city, form.state),
       contact_phone: form.contactPhone.trim() || null,
       price: form.price ? Number(form.price) : null,
       price_unit: form.priceUnit.trim() || null,
@@ -365,10 +403,11 @@ export default function ProviderDashboardPage() {
 
   return (
     <main className="provider-dashboard-page">
+      {providerId && <p className="ex-tag">Active Provider: {providerId}</p>}
       <header className="provider-nav">
-        <Link to="/" className="provider-logo">
+        <div className="provider-logo">
           <img src="/PHOTO-2026-09-25-02-23-39.jpg" alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
-        </Link>
+        </div>
 
         <div className="provider-nav-actions">
           <button onClick={loadListings} disabled={loading}>
@@ -421,6 +460,8 @@ export default function ProviderDashboardPage() {
         </article>
       </section>
 
+      <div className="ex-toggle-row">{[["all", `All Listings (${listings.length})`], ["approved", `Approved (${approvedCount})`], ["pending_review", `Pending Review (${pendingCount})`], ["rejected", `Rejected (${rejectedCount})`]].map(([value, label]) => <button key={value} aria-pressed={statusFilter === value} onClick={() => setStatusFilter(value)}>{label}</button>)}</div>
+      <p className="ex-muted">Monthly views: analytics are not connected.</p>
       <section className="provider-listings">
         <div className="provider-listing-heading">
           <div>
@@ -441,7 +482,7 @@ export default function ProviderDashboardPage() {
         )}
 
         <div className="provider-listings-grid">
-          {listings.map((listing) => {
+          {listings.filter((listing) => statusFilter === "all" || listing.status === statusFilter).map((listing) => {
             const firstImage = [...(listing.listing_images || [])].sort(
               (a, b) => a.sort_order - b.sort_order
             )[0];
@@ -483,6 +524,7 @@ export default function ProviderDashboardPage() {
                 )}
 
                 <div className="provider-card-actions">
+                  <button onClick={() => setPreview(listing)}>◉ Preview</button>
                   <button onClick={() => openEditor(listing)}>
                     Edit listing
                   </button>
@@ -502,6 +544,7 @@ export default function ProviderDashboardPage() {
         </div>
       </section>
 
+      {preview && <Modal title={preview.name} onClose={() => setPreview(null)}><div className="ex-modal-content"><p className="ex-tag">{preview.category} · {preview.status.replaceAll("_", " ")}</p><h2>{preview.name}</h2><p>⌖ {preview.address}</p><p>{preview.description || "No description supplied."}</p><h3>{preview.price === null ? "Price on request" : `₹${preview.price} ${preview.price_unit || ""}`}</h3><p>{preview.amenities?.join(" • ")}</p>{preview.listing_images.map((image) => <img key={image.id} src={getImageUrl(image.storage_path)} alt={preview.name} style={{ width: "100%", borderRadius: 10, marginTop: 12 }} />)}</div></Modal>}
       {editingListing && (
         <div className="provider-modal-backdrop" onClick={closeEditor}>
           <section
@@ -538,8 +581,9 @@ export default function ProviderDashboardPage() {
               />
             </label>
 
+            <ProviderLocationFields state={form.state} city={form.city} onStateChange={(value) => updateForm("state", value)} onCityChange={(value) => updateForm("city", value)} />
             <label>
-              Address
+              Street address / locality
               <input
                 value={form.address}
                 onChange={(event) => updateForm("address", event.target.value)}
