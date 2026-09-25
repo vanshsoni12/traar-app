@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 
 import App from "./App";
 import DirectoryPage from "./pages/DirectoryPage";
@@ -21,7 +21,7 @@ import ProviderDocumentsPage from "./pages/ProviderDocumentsPage";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TripProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<App />} />
@@ -30,7 +30,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/help" element={<HelpBoothPage />} />
 
             <Route path="/provider/login" element={<ProviderLoginPage />} />
-           
+
             <Route path="/provider" element={<ProviderDashboardPage />} />
             <Route path="/provider/services/new" element={<AddListingPage />} />
             <Route path="/provider/documents" element={<ProviderDocumentsPage />} />
@@ -47,7 +47,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/my-trip" element={<MyTripPage />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </TripProvider>
   </StrictMode>
 );
