@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  base: "/T/",
+  base: "/traar-app/",
   plugins: [
     react(),
     VitePWA({
@@ -15,7 +15,8 @@ export default defineConfig({
         theme_color: "#e9def7",
         background_color: "#fffdf8",
         display: "standalone",
-        start_url: "/",
+        start_url: "/traar-app/",
+        scope: "/traar-app/",
         icons: [
           {
             src: "pwa-192x192.png",
