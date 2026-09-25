@@ -744,3 +744,22 @@ select {
   font-size: 13px;
   font-weight: 600;
 }
+@media (min-width: 900px) {
+  .navbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .navbar .logo {
+    justify-self: start;
+  }
+
+  .navbar nav {
+    justify-self: center;
+  }
+
+  .navbar .portal-actions {
+    justify-self: end;
+  }
+}
