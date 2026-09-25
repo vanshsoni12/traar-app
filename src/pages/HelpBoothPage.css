@@ -1,0 +1,277 @@
+.help-page {
+  min-height: 100vh;
+  padding: 44px min(8vw, 110px) 80px;
+  background: #f7f4ed;
+  color: #17251d;
+}
+
+.help-header,
+.help-section,
+.tourist-help,
+.help-request-section,
+.help-faq-section,
+.emergency-card {
+  max-width: 1120px;
+  margin-inline: auto;
+}
+
+.help-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 34px;
+}
+
+.help-back-button {
+  width: 46px;
+  height: 46px;
+  border: 1px solid #d7d5cc;
+  border-radius: 14px;
+  background: white;
+  color: #17251d;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.help-header p,
+.help-section-heading p,
+.tourist-help p,
+.help-request-section > div > p,
+.help-faq-section > p,
+.emergency-card p {
+  margin: 0 0 7px;
+  color: #a65a31;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+}
+
+.help-header h1,
+.help-section-heading h2,
+.tourist-help h2,
+.help-request-section h2 {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+}
+
+.help-header h1 {
+  font-size: clamp(42px, 6vw, 68px);
+  line-height: 1;
+}
+
+.help-header span,
+.tourist-help span,
+.help-request-section span {
+  display: block;
+  margin-top: 10px;
+  color: #5f6a63;
+}
+
+.emergency-card,
+.tourist-help {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  padding: 30px;
+  border-radius: 24px;
+}
+
+.emergency-card {
+  background: #1f4230;
+  color: white;
+}
+
+.emergency-card h2,
+.tourist-help h2 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.emergency-card span {
+  color: #d9e5dc;
+}
+
+.emergency-card button,
+.tourist-help button,
+.help-request-section form > button {
+  border: 0;
+  border-radius: 12px;
+  padding: 14px 20px;
+  background: #efb866;
+  color: #17251d;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.help-section {
+  margin-top: 65px;
+}
+
+.help-section-heading {
+  margin-bottom: 24px;
+}
+
+.help-section-heading h2,
+.help-request-section h2 {
+  font-size: clamp(32px, 4vw, 46px);
+}
+
+.help-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.help-card,
+.help-faq-section article {
+  border: 1px solid #e0ded5;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.help-card {
+  min-height: 205px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.help-card > span {
+  font-size: 30px;
+}
+
+.help-card h3 {
+  margin: 17px 0 8px;
+  font-size: 20px;
+}
+
+.help-card p {
+  margin: 0;
+  color: #657067;
+  line-height: 1.55;
+}
+
+.help-card button {
+  width: max-content;
+  margin-top: auto;
+  padding: 9px 0 0;
+  border: 0;
+  background: transparent;
+  color: #2f8061;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.help-faq-section {
+  margin-top: 28px;
+}
+
+.help-faq-section article {
+  padding: 18px 22px;
+  margin-top: 12px;
+}
+
+.help-faq-section h3,
+.help-faq-section p {
+  margin: 0;
+}
+
+.help-faq-section p:last-child {
+  margin-top: 7px;
+  color: #657067;
+}
+
+.tourist-help {
+  margin-top: 55px;
+  background: #e7d9ba;
+}
+
+.help-request-section {
+  margin-top: 34px;
+  padding: clamp(26px, 4vw, 48px);
+  border-radius: 28px;
+  background: #dcebe1;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 46px;
+}
+
+.help-request-section form {
+  display: grid;
+  gap: 15px;
+}
+
+.help-request-section label {
+  display: grid;
+  gap: 7px;
+  color: #33453a;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.help-request-section input,
+.help-request-section select,
+.help-request-section textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #c7d2ca;
+  border-radius: 11px;
+  padding: 12px;
+  background: white;
+  color: #17251d;
+  font: inherit;
+}
+
+.help-form-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+}
+
+.help-request-section form > button {
+  justify-self: start;
+  background: #2f8061;
+  color: white;
+}
+
+.help-request-section form > button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.help-status-message {
+  margin: 0;
+  color: #a3412b;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .help-page {
+    padding: 28px 18px 55px;
+  }
+
+  .help-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .emergency-card,
+  .tourist-help,
+  .help-request-section {
+    display: block;
+  }
+
+  .emergency-card button,
+  .tourist-help button {
+    margin-top: 20px;
+  }
+
+  .help-request-section {
+    gap: 28px;
+  }
+
+  .help-form-columns {
+    grid-template-columns: 1fr;
+  }
+}

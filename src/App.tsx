@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./App.css";
 
+
 const destinations = [
   { city: "Bhopal", state: "Madhya Pradesh" },
   { city: "Indore", state: "Madhya Pradesh" },
@@ -120,9 +121,8 @@ function App() {
 
           setLocationStatus(
             detectedCity
-              ? `✓ Current location selected: ${detectedCity}${
-                  detectedState ? `, ${detectedState}` : ""
-                }`
+              ? `✓ Current location selected: ${detectedCity}${detectedState ? `, ${detectedState}` : ""
+              }`
               : "✓ Your current location was selected."
           );
         } catch {
@@ -194,7 +194,9 @@ function App() {
             Admin Login
           </Link>
 
-          <button className="help-btn">? Help Booth</button>
+          <Link to="/help" className="help-btn" style={{ textDecoration: "none" }}>
+  ? Help Booth
+</Link>
         </div>
       </header>
 
