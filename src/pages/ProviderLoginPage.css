@@ -2,11 +2,11 @@
   min-height: 100vh;
   box-sizing: border-box;
   padding: 42px 8%;
-  background: linear-gradient(135deg, #fffaf4, #e7f2e9);
+  background: var(--color-lavender);
 }
 
 .provider-login-logo {
-  color: #40534f;
+  color: var(--color-ink);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 28px;
   font-weight: 800;
@@ -14,7 +14,7 @@
 }
 
 .provider-login-logo span {
-  color: #c87862;
+  color: var(--color-accent);
 }
 
 .provider-login-card {
@@ -22,10 +22,10 @@
   box-sizing: border-box;
   margin: 60px auto;
   padding: 38px;
-  border: 1px solid #e7dfd7;
+  border: 1px solid var(--color-line);
   border-radius: 28px;
-  background: white;
-  box-shadow: 0 16px 35px rgba(61, 78, 73, 0.12);
+  background: var(--color-surface);
+  box-shadow: 0 16px 35px rgba(80, 58, 117, 0.12);
 }
 
 .provider-login-icon {
@@ -34,7 +34,7 @@
 
 .provider-login-label {
   margin: 22px 0 8px;
-  color: #af725d;
+  color: var(--color-accent);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 1.4px;
@@ -42,14 +42,14 @@
 
 .provider-login-card h1 {
   margin: 0;
-  color: #40534f;
+  color: var(--color-ink);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 42px;
 }
 
 .provider-login-text {
   margin: 14px 0 25px;
-  color: #71807c;
+  color: var(--color-muted);
   line-height: 1.6;
 }
 
@@ -61,25 +61,31 @@
 .provider-login-card label {
   display: grid;
   gap: 8px;
-  color: #40534f;
+  color: var(--color-ink);
   font-weight: 700;
 }
 
 .provider-login-card input {
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid #d8ddd9;
+  border: 1px solid var(--color-line);
   border-radius: 12px;
   padding: 14px;
-  color: #40534f;
+  color: var(--color-ink);
+  background: var(--color-ivory);
   font-size: 16px;
+}
+
+.provider-login-card input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .provider-login-card form button {
   border: 0;
   border-radius: 12px;
   padding: 15px;
-  background: #627d75;
+  background: var(--color-accent);
   color: white;
   font-size: 16px;
   font-weight: 800;
@@ -87,13 +93,13 @@
 }
 
 .provider-login-card form button:hover {
-  background: #46665d;
+  background: var(--color-accent-hover);
 }
 
 .provider-back-link {
   display: inline-block;
   margin-top: 24px;
-  color: #627d75;
+  color: var(--color-accent);
   font-weight: 700;
   text-decoration: none;
 }

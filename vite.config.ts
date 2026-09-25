@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  base: "/T",
+  base: "/T/",
   plugins: [
     react(),
     VitePWA({
@@ -12,8 +12,8 @@ export default defineConfig({
         name: "TRAAR – Plan, Explore, Support Local",
         short_name: "TRAAR",
         description: "Plan trips, explore places and support local services.",
-        theme_color: "#173b2b",
-        background_color: "#f7f4ed",
+        theme_color: "#e9def7",
+        background_color: "#fffdf8",
         display: "standalone",
         start_url: "/",
         icons: [

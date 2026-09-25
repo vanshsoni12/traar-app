@@ -1,0 +1,32 @@
+:root {
+  color-scheme: light;
+  --color-ink: #211a3a;
+  --color-text: #51456b;
+  --color-muted: #75688c;
+  --color-accent: #6b46c1;
+  --color-accent-hover: #5935a7;
+  --color-accent-soft: #eee4f8;
+  --color-page: #fffdf8;
+  --color-surface: #ffffff;
+  --color-line: #ded3ec;
+  --color-lavender: #e9def7;
+  --color-lilac: #f1e3f5;
+  --color-soft-purple: #e2d2f2;
+  --color-baby-blue: #d4ebfb;
+  --color-sky-blue: #c4e3fb;
+  --color-powder-blue: #d9effb;
+  --color-mint: #d1eee6;
+  --color-pale-green: #d8eedc;
+  --color-olive: #e1edc8;
+  --color-blush: #fbe0e8;
+  --color-rose: #fad6e0;
+  --color-peach: #fbd8cb;
+  --color-apricot: #fbd2b8;
+  --color-butter: #fff5c2;
+  --color-cream: #fff5db;
+  --color-ivory: #fffdf4;
+  --color-beige: #f4ead8;
+  --color-sand: #f5e1cd;
+  --color-gray: #eeeeee;
+  --color-silver: #e8eaec;
+}

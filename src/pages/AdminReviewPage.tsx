@@ -407,7 +407,7 @@ export default function AdminReviewPage() {
     <main className="admin-page">
       <header className="admin-nav">
         <div className="admin-logo">
-          <img src="/PHOTO-2026-09-25-02-23-39.jpg" alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
+          <img src={`${import.meta.env.BASE_URL}PHOTO-2026-09-25-02-23-39.jpg`} alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
         </div>
 
         <div className="admin-nav-actions">

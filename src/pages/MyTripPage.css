@@ -1,14 +1,14 @@
 .trip-page {
   min-height: 100vh;
   padding: 55px 8%;
-  background: #fffaf4;
-  color: #40534f;
+  background: var(--color-page);
+  color: var(--color-ink);
 }
 
 .trip-back {
   display: inline-block;
   margin-bottom: 35px;
-  color: #627d75;
+  color: var(--color-accent);
   font-weight: 700;
   text-decoration: none;
 }
@@ -22,7 +22,7 @@
 .trip-item-info > p,
 .nights-control p {
   margin: 0 0 8px;
-  color: #af725d;
+  color: var(--color-accent);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 1.4px;
@@ -32,13 +32,13 @@
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(40px, 5vw, 62px);
-  color: #40534f;
+  color: var(--color-ink);
 }
 
 .trip-header span {
   display: inline-block;
   margin-top: 12px;
-  color: #788681;
+  color: var(--color-muted);
 }
 
 .nights-control {
@@ -49,7 +49,7 @@
   margin: 25px 0;
   padding: 22px 28px;
   border-radius: 22px;
-  background: linear-gradient(135deg, #dceee1, #c9e4d1);
+  background: var(--color-mint);
 }
 
 .nights-control h2 {
@@ -71,8 +71,8 @@
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: #627d75;
-  color: white;
+  background: var(--color-soft-purple);
+  color: var(--color-text);
   font-size: 24px;
   cursor: pointer;
 }
@@ -94,10 +94,10 @@
   align-items: center;
   gap: 20px;
   padding: 22px;
-  border: 1px solid #e7dfd7;
+  border: 1px solid var(--color-line);
   border-radius: 22px;
-  background: white;
-  box-shadow: 0 8px 20px rgba(61, 78, 73, 0.07);
+  background: var(--color-surface);
+  box-shadow: 0 8px 20px rgb(33 26 58 / 8%);
 }
 
 .trip-item-emoji {
@@ -107,7 +107,7 @@
   flex-shrink: 0;
   place-items: center;
   border-radius: 18px;
-  background: #e3f0e5;
+  background: var(--color-mint);
   font-size: 36px;
 }
 
@@ -119,11 +119,11 @@
   margin: 0 0 7px;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 25px;
-  color: #40534f;
+  color: var(--color-ink);
 }
 
 .trip-item-info span {
-  color: #788681;
+  color: var(--color-muted);
   font-size: 15px;
 }
 
@@ -136,7 +136,7 @@
 
 .trip-item-price strong {
   font-size: 20px;
-  color: #40534f;
+  color: var(--color-ink);
 }
 
 .trip-item-price button {
@@ -150,19 +150,19 @@
 .budget-summary {
   padding: 30px;
   border-radius: 26px;
-  background: linear-gradient(135deg, #638177, #45675e);
-  color: white;
+  background: var(--color-lavender);
+  color: var(--color-ink);
 }
 
 .budget-summary > p {
-  color: #dceee1;
+  color: var(--color-accent);
 }
 
 .budget-summary h2 {
   margin: 0 0 25px;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 36px;
-  color: white;
+  color: var(--color-ink);
 }
 
 .budget-input {
@@ -181,8 +181,8 @@
   border: 0;
   border-radius: 10px;
   padding: 13px;
-  background: white;
-  color: #40534f;
+  background: var(--color-surface);
+  color: var(--color-ink);
   font-size: 16px;
 }
 
@@ -191,7 +191,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 15px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+  border-bottom: 1px solid var(--color-line);
 }
 
 .total-row {
@@ -209,12 +209,12 @@
 }
 
 .within-budget {
-  background: #dceee1;
+  background: var(--color-pale-green);
   color: #315b4a;
 }
 
 .over-budget {
-  background: #ffe0dc;
+  background: var(--color-blush);
   color: #9c3f3a;
 }
 
@@ -229,28 +229,28 @@
 
 .export-button {
   border: 0;
-  background: #fff0e6;
-  color: #40534f;
+  background: var(--color-peach);
+  color: var(--color-text);
 }
 
 .clear-button {
   margin-top: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--color-line);
   background: transparent;
-  color: white;
+  color: var(--color-text);
 }
 
 .budget-summary small {
   display: block;
   margin-top: 18px;
-  color: #e5efea;
+  color: var(--color-muted);
 }
 
 .empty-trip {
   padding: 70px 25px;
-  border: 1px solid #e7dfd7;
+  border: 1px solid var(--color-line);
   border-radius: 28px;
-  background: white;
+  background: var(--color-surface);
   text-align: center;
 }
 
@@ -265,7 +265,7 @@
 }
 
 .empty-trip p {
-  color: #788681;
+  color: var(--color-muted);
 }
 
 .explore-button {
@@ -273,8 +273,8 @@
   margin-top: 20px;
   padding: 14px 18px;
   border-radius: 12px;
-  background: #627d75;
-  color: white;
+  background: var(--color-accent);
+  color: var(--color-surface);
   font-weight: 700;
   text-decoration: none;
 }
@@ -303,14 +303,14 @@
 .route-planner {
   margin: 28px 0;
   padding: 24px;
-  border: 1px solid #c9ddd2;
+  border: 1px solid var(--color-line);
   border-radius: 18px;
-  background: #f7fbf8;
+  background: var(--color-surface);
 }
 
 .route-planner > p {
   margin: 0 0 6px;
-  color: #43806b;
+  color: var(--color-accent);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 1px;
@@ -318,13 +318,13 @@
 
 .route-planner h2 {
   margin: 0;
-  color: #173d31;
+  color: var(--color-ink);
 }
 
 .route-planner > span {
   display: block;
   margin: 8px 0 18px;
-  color: #64786f;
+  color: var(--color-muted);
 }
 
 .route-stop {
@@ -333,9 +333,9 @@
   gap: 12px;
   margin: 10px 0;
   padding: 12px;
-  border: 1px solid #d8e6de;
+  border: 1px solid var(--color-line);
   border-radius: 12px;
-  background: white;
+  background: var(--color-ivory);
 }
 
 .route-stop > strong {
@@ -344,8 +344,8 @@
   height: 28px;
   place-items: center;
   border-radius: 50%;
-  background: #1c765c;
-  color: white;
+  background: var(--color-soft-purple);
+  color: var(--color-text);
 }
 
 .route-stop > span {
@@ -359,16 +359,16 @@
 }
 
 .route-stop small {
-  color: #6a7d74;
+  color: var(--color-muted);
 }
 
 .route-stop button {
   min-width: 34px;
   min-height: 34px;
-  border: 1px solid #bad2c5;
+  border: 1px solid var(--color-line);
   border-radius: 8px;
-  background: white;
-  color: #176149;
+  background: var(--color-surface);
+  color: var(--color-accent);
   cursor: pointer;
 }
 
@@ -389,9 +389,9 @@
 .route-planner {
   margin: 28px 0;
   padding: 24px;
-  border: 1px solid #dbe7e4;
+  border: 1px solid var(--color-line);
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--color-surface);
 }
 
 .route-heading {
@@ -405,7 +405,7 @@
 .route-heading p,
 .route-stop-name span {
   margin: 0;
-  color: #6b7b78;
+  color: var(--color-muted);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.07em;
@@ -419,8 +419,8 @@
   border: 0;
   border-radius: 10px;
   padding: 12px 16px;
-  color: white;
-  background: #167b69;
+  color: var(--color-surface);
+  background: var(--color-accent);
   cursor: pointer;
   font-weight: 700;
 }
@@ -435,9 +435,9 @@
   align-items: center;
   gap: 14px;
   padding: 15px;
-  border: 1px solid #e3ece9;
+  border: 1px solid var(--color-line);
   border-radius: 14px;
-  background: #f9fcfb;
+  background: var(--color-ivory);
 }
 
 .route-number {
@@ -446,8 +446,8 @@
   height: 32px;
   place-items: center;
   border-radius: 50%;
-  color: white;
-  background: #167b69;
+  color: var(--color-text);
+  background: var(--color-soft-purple);
   font-weight: 800;
 }
 
@@ -465,9 +465,9 @@
 .route-order-buttons button {
   width: 32px;
   height: 32px;
-  border: 1px solid #cddbd7;
+  border: 1px solid var(--color-line);
   border-radius: 8px;
-  background: white;
+  background: var(--color-surface);
   cursor: pointer;
 }
 
@@ -479,21 +479,21 @@
 .transport-select {
   display: grid;
   gap: 5px;
-  color: #5c6d69;
+  color: var(--color-muted);
   font-size: 0.78rem;
   font-weight: 700;
 }
 
 .transport-select select {
   padding: 8px;
-  border: 1px solid #cddbd7;
+  border: 1px solid var(--color-line);
   border-radius: 8px;
-  background: white;
+  background: var(--color-surface);
 }
 
 .route-total {
   margin: 18px 0 0;
-  color: #167b69;
+  color: var(--color-accent);
   font-weight: 800;
 }
 

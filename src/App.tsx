@@ -175,15 +175,15 @@ function App() {
       <header className="navbar">
         <div className="logo">
           <img
-            src="/PHOTO-2026-09-25-02-23-39.jpg"
+            src={`${import.meta.env.BASE_URL}PHOTO-2026-09-25-02-23-39.jpg`}
             alt="TRAAR"
             style={{ width: "150px", height: "auto", display: "block" }}
           />
         </div>
 
-        <nav>
-          <a href="#discover">Discover</a>
-          <a href="#popular">Destinations</a>
+        <nav aria-label="Homepage sections">
+          <button type="button" onClick={() => document.getElementById("discover")?.scrollIntoView({ behavior: "smooth" })}>Discover</button>
+          <button type="button" onClick={() => document.getElementById("popular")?.scrollIntoView({ behavior: "smooth" })}>Destinations</button>
         </nav>
 
         <div className="portal-actions">
@@ -219,8 +219,9 @@ function App() {
 
             <div className="search-box">
               <div className="field">
-                <label>State</label>
+                <label htmlFor="home-state">State</label>
                 <input
+                  id="home-state"
                   list="state-options"
                   value={state}
                   onChange={(event) => setState(event.target.value)}
@@ -238,8 +239,9 @@ function App() {
               <div className="divider" />
 
               <div className="field">
-                <label>Destination</label>
+                <label htmlFor="home-destination">Destination</label>
                 <input
+                  id="home-destination"
                   list="destination-options"
                   value={city}
                   onChange={(event) =>
@@ -262,8 +264,9 @@ function App() {
               <div className="divider" />
 
               <div className="field budget-field">
-                <label>Budget (₹) — optional</label>
+                <label htmlFor="home-budget">Budget (₹) — optional</label>
                 <input
+                  id="home-budget"
                   type="number"
                   min="0"
                   value={budget}
@@ -286,7 +289,7 @@ function App() {
             </button>
 
             {locationStatus && (
-              <p className="location-status">{locationStatus}</p>
+              <p className="location-status" role="status">{locationStatus}</p>
             )}
           </div>
 

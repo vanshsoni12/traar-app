@@ -73,7 +73,7 @@ export function SidebarContent({ city = 'Bhopal', onNavigate }: Props & { onNavi
         <Link to="/" className="sidebar-logo" onClick={close}>
 
           <img
-            src="/PHOTO-2026-09-25-02-23-39.jpg"
+            src={`${import.meta.env.BASE_URL}PHOTO-2026-09-25-02-23-39.jpg`}
             alt="TRAAR"
             style={{ width: "150px", height: "auto", display: "block" }}
           />

@@ -406,7 +406,7 @@ export default function ProviderDashboardPage() {
       {providerId && <p className="ex-tag">Active Provider: {providerId}</p>}
       <header className="provider-nav">
         <div className="provider-logo">
-          <img src="/PHOTO-2026-09-25-02-23-39.jpg" alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
+          <img src={`${import.meta.env.BASE_URL}PHOTO-2026-09-25-02-23-39.jpg`} alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
         </div>
 
         <div className="provider-nav-actions">

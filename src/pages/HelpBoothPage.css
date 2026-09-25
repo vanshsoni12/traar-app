@@ -1,8 +1,8 @@
 .help-page {
   min-height: 100vh;
   padding: 44px min(8vw, 110px) 80px;
-  background: #f7f4ed;
-  color: #17251d;
+  background: var(--color-page);
+  color: var(--color-ink);
 }
 
 .help-header,
@@ -25,10 +25,10 @@
 .help-back-button {
   width: 46px;
   height: 46px;
-  border: 1px solid #d7d5cc;
+  border: 1px solid var(--color-line);
   border-radius: 14px;
-  background: white;
-  color: #17251d;
+  background: var(--color-surface);
+  color: var(--color-text);
   font-size: 22px;
   cursor: pointer;
 }
@@ -40,7 +40,7 @@
 .help-faq-section > p,
 .emergency-card p {
   margin: 0 0 7px;
-  color: #a65a31;
+  color: var(--color-accent);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 1.6px;
@@ -64,7 +64,7 @@
 .help-request-section span {
   display: block;
   margin-top: 10px;
-  color: #5f6a63;
+  color: var(--color-muted);
 }
 
 .emergency-card,
@@ -78,8 +78,8 @@
 }
 
 .emergency-card {
-  background: #1f4230;
-  color: white;
+  background: var(--color-blush);
+  color: var(--color-text);
 }
 
 .emergency-card h2,
@@ -89,7 +89,7 @@
 }
 
 .emergency-card span {
-  color: #d9e5dc;
+  color: var(--color-text);
 }
 
 .emergency-card button,
@@ -98,8 +98,8 @@
   border: 0;
   border-radius: 12px;
   padding: 14px 20px;
-  background: #efb866;
-  color: #17251d;
+  background: var(--color-butter);
+  color: var(--color-text);
   font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
@@ -126,9 +126,9 @@
 
 .help-card,
 .help-faq-section article {
-  border: 1px solid #e0ded5;
+  border: 1px solid var(--color-line);
   border-radius: 20px;
-  background: #fff;
+  background: var(--color-surface);
 }
 
 .help-card {
@@ -142,6 +142,18 @@
   font-size: 30px;
 }
 
+.help-card:nth-child(3n + 1) {
+  background: var(--color-powder-blue);
+}
+
+.help-card:nth-child(3n + 2) {
+  background: var(--color-peach);
+}
+
+.help-card:nth-child(3n) {
+  background: var(--color-lilac);
+}
+
 .help-card h3 {
   margin: 17px 0 8px;
   font-size: 20px;
@@ -149,7 +161,7 @@
 
 .help-card p {
   margin: 0;
-  color: #657067;
+  color: var(--color-text);
   line-height: 1.55;
 }
 
@@ -159,7 +171,7 @@
   padding: 9px 0 0;
   border: 0;
   background: transparent;
-  color: #2f8061;
+  color: var(--color-accent);
   font-weight: 800;
   cursor: pointer;
 }
@@ -180,19 +192,19 @@
 
 .help-faq-section p:last-child {
   margin-top: 7px;
-  color: #657067;
+  color: var(--color-muted);
 }
 
 .tourist-help {
   margin-top: 55px;
-  background: #e7d9ba;
+  background: var(--color-butter);
 }
 
 .help-request-section {
   margin-top: 34px;
   padding: clamp(26px, 4vw, 48px);
   border-radius: 28px;
-  background: #dcebe1;
+  background: var(--color-mint);
   display: grid;
   grid-template-columns: 0.8fr 1.2fr;
   gap: 46px;
@@ -206,7 +218,7 @@
 .help-request-section label {
   display: grid;
   gap: 7px;
-  color: #33453a;
+  color: var(--color-text);
   font-size: 14px;
   font-weight: 700;
 }
@@ -216,11 +228,11 @@
 .help-request-section textarea {
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #c7d2ca;
+  border: 1px solid var(--color-line);
   border-radius: 11px;
   padding: 12px;
-  background: white;
-  color: #17251d;
+  background: var(--color-surface);
+  color: var(--color-ink);
   font: inherit;
 }
 
@@ -232,8 +244,8 @@
 
 .help-request-section form > button {
   justify-self: start;
-  background: #2f8061;
-  color: white;
+  background: var(--color-accent);
+  color: var(--color-surface);
 }
 
 .help-request-section form > button:disabled {

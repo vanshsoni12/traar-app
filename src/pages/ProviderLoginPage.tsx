@@ -58,7 +58,7 @@ export default function ProviderLoginPage() {
   return (
     <main className="provider-login-page">
       <div className="provider-login-logo">
-        <img src="/PHOTO-2026-09-25-02-23-39.jpg" alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
+        <img src={`${import.meta.env.BASE_URL}PHOTO-2026-09-25-02-23-39.jpg`} alt="TRAAR" style={{ width: "150px", height: "auto", display: "block" }} />
       </div>
 
       <section className="provider-login-card">
